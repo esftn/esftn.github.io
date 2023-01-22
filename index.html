@@ -15,16 +15,15 @@
             box-sizing: border-box;
         }
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #f4f0e7;
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+        html, body {
+    width: 100%;
+    height: auto;
+    background: #f4f0e7;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
 
         .hoah-body {
             display: flex;
@@ -44,7 +43,14 @@
         }
 
         .hoah-logo img {
-            max-width: 200px;
+            width: 120px;
+            height: auto;
+        }
+
+        @media only screen and (min-width:750px) {
+            .hoah-logo img {
+                width: 200px;
+            }
         }
 
         .hoah-content {
@@ -74,21 +80,37 @@
 
 <body>
     <div class="hoah-body">
+
         <div class="hoah-logo">
             <img src="./img/HOAH-LOGO.png" alt="HOAH Lingerie Logo">
         </div>
+
         <div class="hoah-content">
             <h1>HOAH Lingerie</h1>
             <h2>𝔜𝔬𝔲 𝔞𝔦𝔫’𝔱 𝔰𝔢𝔢𝔫 𝔫𝔬𝔱𝔥𝔦𝔫 𝔶𝔢𝔱</h2>
-            <br><br>
             <p>💦 Easy to take off<br>
-                ✨ Designed for main characters<br>
-                🔥 Currently Stocked on <a href="https://www.instagram.com/clubhellaheels"
-                    target="_blank">@clubhellaheels</a>
+                ✨ Designed for main characters
             </p>
+            <br>
+
+            <h3>Current Stockists</h3>
+
+            <p>
+                Australia<br>
+                <a href="https://au.hellaheels.com" target="_blank">au.hellaheels.com</a>
+                <br><br>
+                North America<br>
+                <a href="https://us.hellaheels.com" target="_blank">us.hellaheels.com</a>
+                <br><br>
+                UK<br>
+                <a href="https://cxix.com" target="_blank">cxix.com</a><br>
+                <a href="https://uk.hellaheels.com" target="_blank">uk.hellaheels.com</a>
+            </p>
+
             <br><br>
-            <a href="https://www.instagram.com/hoah_lingerie" target="_blank">Follow @HOAH</a>
+            <a href="https://www.instagram.com/hoah_lingerie" target="_blank">Instagram @HOAH</a>
         </div>
+
     </div>
 
 </body>
