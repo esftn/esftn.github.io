@@ -132,7 +132,13 @@
 
         .hoah-klaviyo {
             max-width: 500px;
-            height: 180px;
+            height: 210px;
+        }
+
+        @media only screen and (min-width:480px) {
+            .hoah-klaviyo {
+                height: 180px;
+            }
         }
 
         .hoah-insta-icon {
@@ -155,6 +161,22 @@
 
         .hoah-insta-icon:hover svg {
             transform: scale(1.1);
+        }
+
+        .clear {
+            clear: both;
+            display: block;
+            overflow: hidden;
+            visibility: hidden;
+            width: 0;
+            height: 0;
+        }
+
+        .clear:before,
+        .clear:after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 
@@ -233,6 +255,8 @@
                 <h4>Sign up for early access to new releases & exclusive discounts</h4>
                 <div class="klaviyo-form-UFEFNb"></div>
             </div>
+
+            <div class="clear"></div>
 
             <div class="hoah-socials">
                 <a class="hoah-insta-icon" href="https://www.instagram.com/hoah_lingerie" title="Instagram @HOAH"
