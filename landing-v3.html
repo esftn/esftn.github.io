@@ -1,0 +1,1436 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HOAH Collective</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+<style>
+/* ══════════════════════════════════════
+   BASE RESET
+══════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: #fff;
+  color: #000;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: none;
+}
+
+/* ══════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════ */
+#cur-dot,
+#cur-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+#cur-dot {
+  z-index: 9999;
+  width: 7px;
+  height: 7px;
+  background: #ffffff;
+  mix-blend-mode: difference;
+}
+
+#cur-ring {
+  z-index: 9999;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  transition:
+    width 0.2s,
+    height 0.2s;
+  mix-blend-mode: difference;
+}
+
+@media (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
+
+  #cur-dot,
+  #cur-ring {
+    display: none;
+  }
+}
+
+/* ══════════════════════════════════════
+   HEADER — dark teal bar + HOAH logo
+══════════════════════════════════════ */
+.site-header {
+  background: #0c1b1d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 2.8vw, 22px) 20px clamp(12px, 2.4vw, 18px);
+  padding-top: max(clamp(14px, 2.8vw, 22px), env(safe-area-inset-top, 14px));
+  background-image: url(../images/HOAH-HEADER-BLANK.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.site-header svg {
+  width: clamp(58px, 12vw, 88px);
+  fill: #fff;
+}
+
+/* ══════════════════════════════════════
+   HERO — single full-width collage image
+══════════════════════════════════════ */
+.hero {
+  position: relative;
+  width: 100%;
+  background: #0c1b1d;
+  overflow: hidden;
+}
+
+/* @media (min-width: 768px) {
+  .hero {
+    aspect-ratio: 16/8;
+    max-height: 82vh;
+  }
+} */
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════
+   SLINGA SECTION
+══════════════════════════════════════ */
+.slinga-section {
+  background: #fff;
+  padding: clamp(16px, 3vw, 32px) clamp(14px, 2.5vw, 24px)
+    clamp(10px, 2vw, 18px);
+}
+
+.slinga-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(26px, 6.5vw, 70px);
+  text-transform: uppercase;
+  line-height: 1;
+  color: #000;
+}
+
+.slinga-sub {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(12px, 1.7vw, 21px);
+  font-weight: 400;
+  margin-top: 5px;
+  line-height: 1.3;
+}
+
+/* Carousel */
+.carousel-wrap {
+  position: relative;
+  margin-top: clamp(10px, 1.8vw, 16px);
+  overflow: hidden;
+}
+
+@media (min-width: 601px) {
+  .carousel-wrap {
+    -webkit-mask: linear-gradient(
+      to right,
+      transparent 0,
+      #000 1%,
+      #000 99%,
+      transparent 100%
+    );
+    mask: linear-gradient(
+      to right,
+      transparent 0,
+      #000 1%,
+      #000 99%,
+      transparent 100%
+    );
+  }
+}
+
+.carousel-track {
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track.dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+@media (pointer: coarse) {
+  .carousel-track {
+    cursor: auto;
+  }
+}
+
+.carousel-item {
+  flex: 0 0 calc((100% - 4 * 3px) / 5);
+  aspect-ratio: 0.5;
+  overflow: hidden;
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .carousel-item {
+    flex: 0 0 calc((100% - 3 * 3px) / 4);
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel-item {
+    flex: 0 0 calc((100% - 3px) / 2);
+  }
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  pointer-events: none;
+  transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@media (hover: hover) {
+  .carousel-track:not(.dragging) .carousel-item:hover img {
+    transform: scale(1.06);
+  }
+}
+
+.car-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: auto;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  cursor: none;
+  transition: background 0.18s;
+}
+
+.car-btn img {
+  background: transparent;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.car-btn.prev {
+  left: 8px;
+}
+
+.car-btn.next {
+  right: 8px;
+}
+
+.car-btn[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .car-btn {
+    width: 35px;
+  }
+}
+
+.discover-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: clamp(9px, 1.8vw, 14px);
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .discover-row {
+    justify-content: center;
+  }
+}
+
+.yt-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.yt-pill img {
+  width: clamp(40px, 5vw, 65px);
+  height: auto;
+}
+
+.discover-label {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(18px, 6vw, 50px);
+  text-transform: uppercase;
+  color: #000;
+  white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   CATEGORY GRID
+══════════════════════════════════════ */
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.cat-cell {
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+}
+
+@media (min-width: 768px) {
+  .cat-cell {
+    aspect-ratio: 1.3;
+  }
+}
+
+.cat-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  will-change: transform;
+  transition:
+    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.7s;
+}
+
+@media (hover: hover) {
+  .cat-cell:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.cat-cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.7s;
+}
+
+@media (hover: hover) {
+  .cat-cell:hover::after {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Label — absolute center (both axes) */
+.cat-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(21px, 4.2vw, 48px);
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1;
+  z-index: 2;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════
+   FIND YOUR VIBE
+══════════════════════════════════════ */
+.vibe-section {
+  background: #fff;
+  padding: clamp(28px, 5vw, 56px) clamp(14px, 3.5vw, 32px)
+    clamp(16px, 3vw, 28px);
+  text-align: right;
+}
+
+@media (max-width: 600px) {
+  .vibe-section {
+    text-align: center;
+  }
+}
+
+.vibe-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(36px, 9vw, 88px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.vibe-sub {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(14px, 1.8vw, 21px);
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-top: 7px;
+  line-height: 1.3;
+}
+
+/* ══════════════════════════════════════
+   SPARKLE DIVIDER
+══════════════════════════════════════ */
+.sparkle {
+  background: #fff;
+  text-align: center;
+  font-size: clamp(14px, 2.4vw, 17px);
+  letter-spacing: 8px;
+  color: rgba(0, 0, 0, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sparkle img {
+  width: 100px;
+  height: auto;
+}
+
+/* ══════════════════════════════════════
+   CHOOSE YOUR STORE
+══════════════════════════════════════ */
+.store-section {
+  background: #fff;
+  padding: clamp(20px, 3.5vw, 40px) clamp(14px, 3.5vw, 32px)
+    clamp(24px, 4vw, 44px);
+  text-align: center;
+}
+
+section#store {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.store-title {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(24px, 5.5vw, 40px);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: clamp(14px, 2.5vw, 22px);
+}
+
+.store-btns {
+  display: flex;
+  gap: clamp(6px, 1.2vw, 10px);
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.store-btn {
+  flex: 1;
+  min-width: clamp(90px, 60vw, 200px);
+  padding: clamp(13px, 2.2vw, 18px) clamp(8px, 1.5vw, 14px);
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(21px, 2.5vw, 36px);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: none;
+  white-space: nowrap;
+  transition:
+    background 0.22s,
+    color 0.22s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+
+.store-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.store-note {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: clamp(10px, 1.8vw, 16px);
+}
+
+/* ══════════════════════════════════════
+   SIGN UP
+══════════════════════════════════════ */
+.signup-section {
+  background: #fff;
+  padding: clamp(18px, 3.5vw, 36px) clamp(14px, 3.5vw, 32px)
+    clamp(28px, 5vw, 52px);
+}
+
+.signup-label {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(20px, 2.5vw, 36px);
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: clamp(12px, 2.2vw, 20px);
+  line-height: 1.2;
+}
+
+.signup-row {
+  display: flex;
+  width: 100%;
+}
+
+.signup-input {
+  flex: 1;
+  min-width: 0;
+  padding: clamp(12px, 2.2vw, 15px) clamp(12px, 2vw, 16px);
+  border: 1px solid rgba(0, 0, 0, 0.26);
+  background: #fff;
+  color: #000;
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(11px, 1.8vw, 18px);
+  outline: none;
+  cursor: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+  margin-right: 10px;
+}
+
+@media (min-width: 768px) {
+  .signup-input {
+    margin-right: 20px;
+  }
+}
+
+.signup-input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.signup-input:focus {
+  border-color: #000;
+}
+
+/* Sign-up button */
+.signup-btn {
+  min-width: 35vw;
+  background: #000;
+  color: #fff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(21px, 2.5vw, 36px);
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: none;
+  white-space: nowrap;
+  border: 2px solid #000;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+  padding: 5px 0;
+}
+
+@media (min-width: 768px) {
+  .signup-btn {
+    min-width: 25vw;
+    padding: 10px 0;
+  }
+}
+
+.signup-btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+.signup-disc {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(8px, 1.4vw, 12px);
+  line-height: 1.65;
+  color: rgba(0, 0, 0, 0.32);
+  margin-top: clamp(8px, 1.4vw, 12px);
+}
+
+.signup-ig {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(16px, 2vw, 24px);
+  margin-top: clamp(8px, 1.4vw, 12px);
+  margin-bottom: clamp(8px, 1.4vw, 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.footer {
+  background: #0c1b1d;
+  padding: clamp(44px, 7vw, 74px) 20px
+    max(clamp(44px, 6vw, 68px), env(safe-area-inset-bottom, 44px));
+  text-align: center;
+  background-image: url(../images/HOAH-HEADER-BLANK.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.footer-tag {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(11px, 2.2vw, 21px);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.3;
+  margin-bottom: clamp(5px, 1.4vw, 10px);
+}
+
+.footer-handle {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(20px, 4.5vw, 36px);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: clamp(22px, 4vw, 38px);
+  line-height: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: transform 0.25s;
+  cursor: none;
+}
+
+.footer-handle:hover {
+  transform: scale(1.03);
+}
+
+.footer-ig {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(42px, 7vw, 52px);
+  height: clamp(42px, 7vw, 52px);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: clamp(10px, 1.8vw, 13px);
+  cursor: none;
+  transition:
+    border-color 0.25s,
+    transform 0.25s;
+}
+
+.footer-ig:hover {
+  border-color: rgba(255, 255, 255, 0.88);
+  transform: scale(1.08);
+}
+
+.footer-ig svg {
+  width: clamp(20px, 3.5vw, 24px);
+  height: clamp(20px, 3.5vw, 24px);
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Loader removed */
+
+/* ══════════════════════════════════════
+   HELLA HEELS STOCKIST SECTION
+══════════════════════════════════════ */
+.hella-section {
+  background: #000;
+  padding: clamp(28px, 4vw, 50px) clamp(16px, 3vw, 32px);
+  text-align: center;
+  background-image: url(../images/HOAH-HEADER-BLANK.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.hella-title {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(24px, 5vw, 36px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: clamp(24px, 4vw, 44px);
+    position: relative;
+    display: inline-block;
+}
+
+.hella-title::before,
+.hella-title::after {
+  content: '✦';
+  font-size: 0.45em;
+  vertical-align: super;
+  opacity: 0.85;
+  margin: 0 6px;
+}
+
+.hella-stores {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(15px, 5vw, 80px);
+  flex-wrap: wrap;
+}
+
+.hella-store {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  cursor: none;
+}
+
+.hella-flag {
+  width: clamp(50px, 15vw, 120px);
+  height: clamp(50px, 15vw, 120px);
+  border-radius: 50%;
+  overflow: hidden;
+  display: block;
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+}
+
+.hella-flag img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+@media (hover: hover) {
+  .hella-store:hover .hella-flag {
+    transform: scale(1.06);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+  }
+}
+
+.hella-store-label {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(16px, 2.5vw, 26px);
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   ENHANCED SECTION REVEALS
+══════════════════════════════════════ */
+
+
+/* Text reveal clip — used for headings */
+.reveal-wrap {
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Horizontal marquee for .signup-ig line */
+.signup-ig {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Subtle parallax container for hero */
+.hero {
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════
+   SCROLL PROGRESS BAR
+══════════════════════════════════════ */
+#scroll-prog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: #fff;
+  z-index: 9998;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transform-origin: left center;
+}
+</style>
+
+
+
+<body>
+  <!-- ══════ SCROLL PROGRESS ══════ -->
+  <div id="scroll-prog"></div>
+
+  <div id="cur-dot"></div>
+  <div id="cur-ring"></div>
+
+  <!-- ══════ HEADER ══════ -->
+  <header class="site-header" id="siteHeader">
+    <svg id="header-logo" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 800 400"
+      viewBox="0 0 800 400">
+      <path
+        d="M367 23.4H123.7v140.9H99.1V42.2c0-10.2-8.6-18.8-18.8-18.8h-67v5.9h5.4c7.5 0 13.4 5.9 13.4 12.9v316.2c0 7-5.9 12.9-13.4 12.9h-5.4v5.4H99v-201h24.7v182.8c0 10.2 8 18.2 18.2 18.2h67v-5.4h-5.4c-7.5 0-13.4-5.9-13.4-12.9V29.3H214.3c7.5 0 13.4 5.9 13.4 12.9v316.2c0 10.2 8.6 18.2 18.8 18.2H367c10.7 0 18.8-8 18.8-18.2V42.2c0-10.2-8-18.8-18.8-18.8zm-47.7 347.8h-11.8c-7 0-12.9-5.9-12.9-12.9v-329h11.3c7.5 0 13.4 5.9 13.4 12.9v329zM786.7 29.3v-5.9h-85.2v140.9h-24.7V42.2c0-10.2-8.6-18.8-18.8-18.8H433c-10.2 0-18.8 8.6-18.8 19.3v315.7c0 7-5.9 12.9-12.9 12.9h-5.9v5.4h67c10.2 0 18.8-8 18.8-18.2V175.6h24.7v201h170.9v-201h24.7v182.8c0 10.2 8 18.2 18.2 18.2h67v-5.4h-5.4c-7.5 0-13.4-5.9-13.4-12.9v-329h18.8zM505.8 164.4h-24.7V42.7c0-7.5 5.9-13.4 12.9-13.4h11.8v135.1zm104 194c0 7-5.9 12.9-13.4 12.9h-11.3c-7 0-12.9-5.9-12.9-12.9V29.3H596.4c7.5 0 13.4 5.9 13.4 12.9v316.2z">
+      </path>
+    </svg>
+  </header>
+
+  <!-- ══════ HERO — single collage image ══════ -->
+  <section class="hero" id="hero">
+    <!--
+    Replace src/srcset with your actual collage photo.
+    Recommended: a wide landscape crop of all models together.
+  -->
+    <!-- <img id="heroImg" class="hero-img" src="images/WEB-HERO-BANNER.jpg" srcset="
+          images/MOBILE-HERO-BANNER.jpg 600w,
+          images/WEB-HERO-BANNER.jpg  1000w,
+          images/WEB-HERO-BANNER.jpg 1600w
+        " sizes="100vw" alt="HOAH Collective collage" loading="eager" fetchpriority="high" /> -->
+
+
+    <picture>
+      <!-- Mobile hero -->
+      <source media="(max-width: 767px)" srcset="
+      images/MOBILE-HERO-BANNER.jpg 480w,
+      images/MOBILE-HERO-BANNER.jpg 720w,
+      images/MOBILE-HERO-BANNER.jpg 900w
+    " sizes="100vw">
+      <!-- Desktop hero -->
+      <source media="(min-width: 768px)" srcset="
+      images/WEB-HERO-BANNER.jpg 800w,
+      images/WEB-HERO-BANNER.jpg 1200w,
+      images/WEB-HERO-BANNER.jpg 1600w
+    " sizes="100vw">
+      <img id="heroImg" class="hero-img" src="images/WEB-HERO-BANNER.jpg" alt="HOAH Collective collage" loading="eager"
+        fetchpriority="high" decoding="async">
+    </picture>
+
+  </section>
+
+  <!-- ══════ STOCKED ON HELLA HEELS ══════ -->
+  <section class="hella-section" id="hella">
+    <h2 class="hella-title">Stocked on Hella Heels</h2>
+    <div class="hella-stores">
+      <a href="https://au.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop AU/Asia">
+        <div class="hella-flag">
+          <img src="https://flagcdn.com/w320/au.png" alt="Australia flag" loading="lazy" />
+        </div>
+        <span class="hella-store-label">Shop AU/Asia</span>
+      </a>
+      <a href="https://uk.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop UK/EU">
+        <div class="hella-flag">
+          <img src="https://flagcdn.com/w320/gb.png" alt="UK flag" loading="lazy" />
+        </div>
+        <span class="hella-store-label">Shop UK/EU</span>
+      </a>
+      <a href="https://us.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop US/CA">
+        <div class="hella-flag">
+          <img src="https://flagcdn.com/w320/us.png" alt="US flag" loading="lazy" />
+        </div>
+        <span class="hella-store-label">Shop US/CA</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════ BESTSELLING SLINGA ══════ -->
+  <section class="slinga-section" id="slinga">
+    <div id="slingaHeader">
+      <div style="overflow:hidden"><h2 class="slinga-title">Bestselling Infinity Slinga</h2></div>
+      <p class="slinga-sub">
+        Infinite ways to wear. Infinite reasons to pack it.&nbsp; Beach clubs,
+        pool parties, and beyond.
+      </p>
+    </div>
+
+    <div class="carousel-wrap" id="carWrap">
+      <button class="car-btn prev" id="carPrev" aria-label="Previous" disabled>
+        <img src="images/SLINGA IMAGES SCROLLER/LEFT ARROW.png" alt="left" loading="lazy" />
+      </button>
+      <button class="car-btn next" id="carNext" aria-label="Next">
+        <img src="images/SLINGA IMAGES SCROLLER/RIGHT ARROW.png" alt="right" loading="lazy" />
+      </button>
+      <div class="carousel-track" id="carTrack">
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/1 Pearl Mermaid White.jpg" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/2 Mean Girls Pink.png" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/3 Black Rainbow Sparkle.png" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/4 Red Rainbow Sparkle.png" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/5 Onyx Mermaid Black.png" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/6 Buttercream Baby.png" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/7 Brown Sugar.jpg" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img src="images/SLINGA IMAGES SCROLLER/8 Certified Heartbreaker Black_Pink.jpg" alt="" loading="lazy" />
+        </div>
+        <div class="carousel-item">
+          <img
+            src="images/SLINGA IMAGES SCROLLER/9 HOAH_Infinity_Slinga_II_All_in_One_Bikini_Black_Smoke_Show_Swimwear_Lingerie_Pole_Dance_Multiple_Bodysuit.jpg"
+            alt="" loading="lazy" />
+        </div>
+      </div>
+    </div>
+
+    <a href="https://www.youtube.com/playlist?list=PLmhRx7qOoVlN5p2K03Ml4mWfdE0XVcH6l" target="_blank" rel="noopener" aria-label="How to playlist">
+      <div class="discover-row" id="discoverRow">
+        <div class="yt-pill">
+          <img src="images/DISCOVER WAYS TO WEAR ICON.png" alt="Discover Our Ways To Wear" loading="lazy" />
+        </div>
+        <span class="discover-label">Discover Our Ways To Wear</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- ══════ CATEGORY GRID ══════ -->
+  <section class="cat-section" id="cats">
+    <div class="cat-grid" id="catGrid">
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/SPARKLE KINIS.png"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/SPARKLE KINIS.png 300w
+              images/KINI IMAGES/SPARKLE KINIS.png 600w
+            
+        <span class="cat-label">Sparkle Kinis</span>
+      </div>
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/METALLIC KINIS.jpg"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/METALLIC KINIS.jpg 300w
+              images/KINI IMAGES/METALLIC KINIS.jpg 600w
+            
+        <span class="cat-label">Metallic Kinis</span>
+      </div>
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/NEON KINIS.jpg"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/NEON KINIS.jpg 300w
+              images/KINI IMAGES/NEON KINIS.jpg 600w
+            
+        <span class="cat-label">Neon Kinis</span>
+      </div>
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/LEOPARD KINIS.JPG"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/LEOPARD KINIS.JPG 300w
+              images/KINI IMAGES/LEOPARD KINIS.JPG 600w
+            
+        <span class="cat-label">Leopard Kinis</span>
+      </div>
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/SEQUIN KINIS.png"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/SEQUIN KINIS.png 300w
+              images/KINI IMAGES/SEQUIN KINIS.png 600w
+            
+        <span class="cat-label">Sequin Kinis</span>
+      </div>
+      <div class="cat-cell">
+        <img src="images/KINI IMAGES/KINI COVERUPS.png"
+          srcset="," sizes="50vw" alt="" loading="lazy" />
+              images/KINI IMAGES/KINI COVERUPS.png 300w
+              images/KINI IMAGES/KINI COVERUPS.png 600w
+            
+        <span class="cat-label">Kini Coverups</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════ FIND YOUR VIBE ══════ -->
+  <section class="vibe-section" id="vibe">
+    <p class="vibe-title">Find Your Vibe.</p>
+    <p class="vibe-sub">Made for every kind of summer, party and vibe.</p>
+  </section>
+
+  <!-- ══════ SPARKLE 1 ══════ -->
+  <div class="sparkle" id="sparkle1">
+    <img src="images/BLACK SPARKLES.png" alt="sparkles" loading="lazy" />
+  </div>
+
+  <!-- ══════ CHOOSE YOUR STORE ══════ -->
+  <section class="store-section" id="store">
+    <h2 class="store-title">Choose Your Store</h2>
+    <div class="store-btns">
+      <a href="https://au.hellaheels.com/collections/hoah" target="_blank" class="store-btn" aria-label="AU Stockists">AU Stockists</a>
+      <a href="https://uk.hellaheels.com/collections/hoah" target="_blank" class="store-btn" aria-label="UK Stockists">UK Stockists</a>
+      <a href="https://us.hellaheels.com/collections/hoah" target="_blank" class="store-btn" aria-label="US Stockists">US Stockists</a>
+    </div>
+    <p class="store-note">All Stockists Ship Globally</p>
+  </section>
+
+  <!-- ══════ SPARKLE 2 ══════ -->
+  <div class="sparkle" id="sparkle2">
+    <img src="images/BLACK SPARKLES.png" alt="sparkles" loading="lazy" />
+  </div>
+
+  <!-- ══════ SIGN UP ══════ -->
+  <section class="signup-section" id="signup">
+    <p class="signup-label">
+      Sign up for early access to new releases &amp; exclusive discounts
+    </p>
+    <div class="signup-row">
+      <input id="emailInput" class="signup-input" type="email" placeholder="Enter your email address"
+        autocomplete="email" />
+      <button id="signupBtn" class="signup-btn">Sign Up</button>
+    </div>
+    <p class="signup-disc">
+      By signing up for email, you are agreeing to receive email messaging
+      from HOAH. You can unsubscribe at any time.
+    </p>
+  </section>
+
+  <div class="signup-ig">Follow us on Instagram for popups/events near you</div>
+
+  <!-- ══════ FOOTER ══════ -->
+  <footer class="footer" id="footer">
+    <p class="footer-tag">Tag Us. Get Seen. Join the Club.</p>
+    <a href="https://www.instagram.com/hoahcollective" target="_blank" rel="noopener"
+      aria-label="Instagram">
+    <p class="footer-handle">@HOAHCollective</p>
+    </a>
+    <a href="https://www.instagram.com/hoahcollective" class="footer-ig" target="_blank" rel="noopener"
+      aria-label="Instagram">
+      <svg viewBox="0 0 24 24">
+        <rect x="2" y="2" width="20" height="20" rx="5.5" />
+        <circle cx="12" cy="12" r="4.5" />
+        <circle cx="17.5" cy="6.5" r="1.2" fill="#fff" stroke="none" />
+      </svg>
+    </a>
+  </footer>
+
+
+
+<script>
+(function(){
+'use strict';
+gsap.registerPlugin(ScrollTrigger);
+
+/* ══════════════════════════════════════
+   DIRECT PAGE INIT (no loader)
+══════════════════════════════════════ */
+const headerLogoEl = document.getElementById('header-logo');
+gsap.set(headerLogoEl, { opacity: 1 });
+
+/* ══════════════════════════════════════
+   LENIS SMOOTH SCROLL
+══════════════════════════════════════ */
+let lenis;
+function initLenis() {
+  lenis = new Lenis({
+    duration: 1.25,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smoothTouch: false,
+    touchMultiplier: 1.8,
+  });
+
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ══════════════════════════════════════
+   SCROLL PROGRESS BAR
+══════════════════════════════════════ */
+function initScrollProg() {
+  const prog = document.getElementById('scroll-prog');
+  lenis.on('scroll', ({ progress: p }) => {
+    prog.style.width = (p * 100) + '%';
+  });
+}
+
+/* ══════════════════════════════════════
+   MAIN PAGE INIT (after loader)
+══════════════════════════════════════ */
+function initPage() {
+  initLenis();
+  initScrollProg();
+
+  const isTouch = window.matchMedia('(pointer:coarse)').matches;
+
+  /* ── Cursor ──────────────────────── */
+  const dot  = document.getElementById('cur-dot');
+  const ring = document.getElementById('cur-ring');
+  if(!isTouch){
+    let mx=0,my=0,rx=0,ry=0;
+    document.addEventListener('mousemove',e=>{
+      mx=e.clientX;my=e.clientY;
+      gsap.to(dot,{x:mx,y:my,duration:.08,ease:'none'});
+    });
+    (function loop(){
+      rx+=(mx-rx)*.09;ry+=(my-ry)*.09;
+      ring.style.left=rx+'px';ring.style.top=ry+'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a,button,.cat-cell,.footer-ig,.store-btn,.hella-store').forEach(el=>{
+      el.addEventListener('mouseenter',()=>gsap.to(ring,{width:50,height:50,duration:.2}));
+      el.addEventListener('mouseleave',()=>gsap.to(ring,{width:30,height:30,duration:.2}));
+    });
+    const track=document.getElementById('carTrack');
+    track.addEventListener('mouseenter',()=>gsap.to(ring,{width:60,height:60,borderColor:'rgba(255,255,255,0.6)',duration:.2}));
+    track.addEventListener('mouseleave',()=>gsap.to(ring,{width:30,height:30,borderColor:'rgba(255,255,255,0.45)',duration:.2}));
+    track.addEventListener('mousedown', ()=>gsap.to(ring,{width:42,height:42,duration:.12}));
+    track.addEventListener('mouseup',   ()=>gsap.to(ring,{width:60,height:60,duration:.2}));
+  }
+
+  /* ── Header entrance (post-loader) ──────────────── */
+  // gsap.fromTo('#siteHeader',
+  //   { yPercent: -100, opacity: 0 },
+  //   { yPercent: 0, opacity: 1, duration: 1.1, ease: 'expo.out', delay: 0.05 }
+  // );
+
+  /* ── Hero parallax ────────────────────────── */
+  // const heroImg = document.getElementById('heroImg');
+  // gsap.fromTo(heroImg,
+  //   { scale: 1.08 },
+  //   { scale: 1, duration: 1.6, ease: 'expo.out', delay: 0.1 }
+  // );
+  // // Parallax on scroll
+  // gsap.to(heroImg, {
+  //   yPercent: -12,
+  //   ease: 'none',
+  //   scrollTrigger: {
+  //     trigger: '#hero',
+  //     start: 'top top',
+  //     end: 'bottom top',
+  //     scrub: 1.4
+  //   }
+  // });
+
+  /* ── Hella Heels section ─────────────── */
+  gsap.fromTo('#hella .hella-title',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+      scrollTrigger: { trigger: '#hella', start: 'top 90%', once: true }
+    });
+  gsap.fromTo('#hella .hella-store',
+    { opacity: 0, y: 30, scale: 0.92 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(1.5)',
+      scrollTrigger: { trigger: '#hella', start: 'top 88%', once: true }
+    });
+
+  /* ── Slinga heading — clip reveal ──── */
+  gsap.fromTo('#slingaHeader .slinga-title',
+    { y: '105%' },
+    { y: '0%', duration: 0.85, ease: 'expo.out',
+      scrollTrigger: { trigger: '#slinga', start: 'top 88%', once: true }
+    });
+  gsap.fromTo('#slingaHeader .slinga-sub',
+    { opacity: 0, y: 14 },
+    { opacity: 1, y: 0, duration: 0.65, delay: 0.15, ease: 'power3.out',
+      scrollTrigger: { trigger: '#slinga', start: 'top 88%', once: true }
+    });
+
+  /* ── Carousel items ─────── */
+  gsap.fromTo('.carousel-item',
+    { opacity: 0, y: 36, scaleY: 0.93 },
+    { opacity: 1, y: 0, scaleY: 1, duration: 0.65, stagger: 0.07, ease: 'power3.out',
+      transformOrigin: 'bottom center',
+      scrollTrigger: { trigger: '#carWrap', start: 'top 92%', once: true }
+    });
+
+  gsap.fromTo('#discoverRow',
+    { opacity: 0, x: 32 },
+    { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out',
+      scrollTrigger: { trigger: '#discoverRow', start: 'top 95%', once: true }
+    });
+
+  /* ── Category grid ───────────────── */
+  gsap.fromTo('.cat-cell',
+    { opacity: 0, scale: 0.92, y: 20 },
+    { opacity: 1, scale: 1, y: 0, duration: 0.7,
+      stagger: { each: 0.1, grid: [3, 2], from: 'start' },
+      ease: 'power3.out',
+      scrollTrigger: { trigger: '#catGrid', start: 'top 88%', once: true }
+    });
+
+  gsap.fromTo('.cat-label',
+    { opacity: 0, y: 12 },
+    { opacity: 1, y: 0, duration: 0.45, stagger: 0.09, ease: 'power2.out',
+      scrollTrigger: { trigger: '#catGrid', start: 'top 84%', once: true }
+    });
+
+  // Cat cell tilt on hover
+  if(!isTouch){
+    document.querySelectorAll('.cat-cell').forEach(cell=>{
+      cell.addEventListener('mousemove',e=>{
+        const r=cell.getBoundingClientRect();
+        gsap.to(cell,{
+          rotateY:((e.clientX-r.left)/r.width-.5)*7,
+          rotateX:-((e.clientY-r.top)/r.height-.5)*5,
+          perspective:900,duration:.4,ease:'power1.out'
+        });
+      });
+      cell.addEventListener('mouseleave',()=>gsap.to(cell,{rotateY:0,rotateX:0,duration:.5,ease:'power2.out'}));
+    });
+  }
+
+  /* ── Find Your Vibe — large heading split reveal ── */
+  const isMob = window.innerWidth <= 600;
+  gsap.fromTo('#vibe .vibe-title',
+    { opacity: 0, x: isMob ? 0 : 60, skewX: isMob ? 0 : -3 },
+    { opacity: 1, x: 0, skewX: 0, duration: 1.0, ease: 'expo.out',
+      scrollTrigger: { trigger: '#vibe', start: 'top 90%', once: true }
+    });
+  gsap.fromTo('#vibe .vibe-sub',
+    { opacity: 0, x: isMob ? 0 : 38 },
+    { opacity: 1, x: 0, duration: 0.7, delay: 0.12, ease: 'power3.out',
+      scrollTrigger: { trigger: '#vibe', start: 'top 88%', once: true }
+    });
+
+  /* ── Sparkles ────────────────────── */
+  ['#sparkle1','#sparkle2'].forEach((id,i)=>{
+    ScrollTrigger.create({trigger:id,start:'top 95%',once:true,
+      onEnter:()=>{
+        gsap.fromTo(id,{opacity:0,scale:0.85},{opacity:1,scale:1,duration:.6,ease:'back.out(1.6)'});
+        gsap.to(id,{opacity:.35,duration:1.8,yoyo:true,repeat:-1,ease:'sine.inOut',delay:.5+i*.3});
+      }
+    });
+  });
+
+  /* ── Store section ───────────────── */
+  gsap.fromTo('#store .store-title',
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+      scrollTrigger: { trigger: '#store', start: 'top 90%', once: true }
+    });
+  gsap.fromTo('#store .store-btn',
+    { opacity: 0, y: 32, scaleY: 0.9 },
+    { opacity: 1, y: 0, scaleY: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(1.7)',
+      scrollTrigger: { trigger: '#store', start: 'top 88%', once: true }
+    });
+  gsap.fromTo('#store .store-note',
+    { opacity: 0 },
+    { opacity: 1, duration: 0.5, delay: 0.32,
+      scrollTrigger: { trigger: '#store', start: 'top 86%', once: true }
+    });
+
+  /* ── Signup section ──────────────── */
+  gsap.fromTo('#signup .signup-label',
+    { opacity: 0, x: -32 },
+    { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#signup', start: 'top 90%', once: true }
+    });
+  gsap.fromTo('#signup .signup-row',
+    { opacity: 0, y: 26 },
+    { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', delay: 0.12,
+      scrollTrigger: { trigger: '#signup', start: 'top 88%', once: true }
+    });
+  gsap.fromTo('#signup .signup-disc',
+    { opacity: 0 },
+    { opacity: 1, duration: 0.5, delay: 0.25,
+      scrollTrigger: { trigger: '#signup', start: 'top 86%', once: true }
+    });
+
+  /* signup-ig sliding marquee reveal */
+  gsap.fromTo('.signup-ig',
+    { opacity: 0, y: 14 },
+    { opacity: 1, y: 0, duration: 0.5, delay: 0.3, ease: 'power3.out',
+      scrollTrigger: { trigger: '.signup-ig', start: 'top 95%', once: true }
+    });
+
+  /* ── Signup logic ────────────────── */
+  const emailInput = document.getElementById('emailInput');
+  const signupBtn  = document.getElementById('signupBtn');
+  signupBtn.addEventListener('click',()=>{
+    if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())){
+      signupBtn.textContent='Subscribed ✓';
+      signupBtn.classList.add('done');
+      gsap.fromTo(signupBtn,{scale:.93},{scale:1,duration:.4,ease:'back.out(2.5)'});
+    } else {
+      gsap.to(emailInput,{x:-6,duration:.055,yoyo:true,repeat:8,ease:'none',
+        onComplete:()=>gsap.set(emailInput,{x:0})});
+      emailInput.focus();
+    }
+  });
+  emailInput.addEventListener('keydown',e=>{if(e.key==='Enter')signupBtn.click();});
+
+  /* ── Footer ──────────────────────── */
+  gsap.fromTo('#footer .footer-tag',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: '#footer', start: 'top 95%', once: true }
+    });
+  gsap.fromTo('#footer .footer-handle',
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'expo.out',
+      scrollTrigger: { trigger: '#footer', start: 'top 93%', once: true }
+    });
+  gsap.fromTo('#footer .footer-ig',
+    { opacity: 0, scale: 0.75 },
+    { opacity: 1, scale: 1, duration: 0.55, delay: 0.22, ease: 'back.out(1.8)',
+      scrollTrigger: { trigger: '#footer', start: 'top 92%', once: true }
+    });
+
+  if(!isTouch){
+    const ig=document.querySelector('.footer-ig');
+    ig.addEventListener('mouseenter',()=>gsap.to(ig,{scale:1.1,duration:.22,ease:'back.out(2)'}));
+    ig.addEventListener('mouseleave',()=>gsap.to(ig,{scale:1,duration:.25,ease:'power2.out'}));
+    ig.addEventListener('mousedown', ()=>gsap.to(ig,{scale:.94,duration:.1}));
+    ig.addEventListener('mouseup',   ()=>gsap.to(ig,{scale:1.08,duration:.18,ease:'back.out(2.5)'}));
+  }
+
+  /* ══════════════════════════════════
+     CAROUSEL ENGINE
+  ══════════════════════════════════ */
+  (function carousel(){
+    const track=document.getElementById('carTrack');
+    const prev =document.getElementById('carPrev');
+    const next =document.getElementById('carNext');
+    const items=Array.from(track.querySelectorAll('.carousel-item'));
+    const step =()=>items[0].getBoundingClientRect().width+3;
+    const idx  =()=>Math.round(track.scrollLeft/step());
+    const go=(i,instant)=>{
+      const t=Math.max(0,Math.min(items.length-1,i))*step();
+      if(instant){track.scrollLeft=t;return;}
+      gsap.to(track,{scrollLeft:t,duration:.5,ease:'power3.out',onUpdate:ui});
+    };
+    const ui=()=>{
+      prev.disabled=track.scrollLeft<=1;
+      next.disabled=track.scrollLeft>=(track.scrollWidth-track.clientWidth-1);
+    };
+    prev.addEventListener('click',()=>go(idx()-1));
+    next.addEventListener('click',()=>go(idx()+1));
+    let snapT;
+    track.addEventListener('scroll',()=>{
+      ui();clearTimeout(snapT);
+      snapT=setTimeout(()=>{if(!drag)go(idx());},80);
+    },{passive:true});
+    let drag=false,sx=0,sl=0,lx=0,lt=0,vel=0;
+    track.addEventListener('mousedown',e=>{
+      drag=true;sx=e.clientX;sl=track.scrollLeft;
+      lx=e.clientX;lt=performance.now();vel=0;
+      track.classList.add('dragging');e.preventDefault();
+    });
+    window.addEventListener('mousemove',e=>{
+      if(!drag)return;
+      const now=performance.now();
+      vel=(e.clientX-lx)/Math.max(now-lt,1);
+      lx=e.clientX;lt=now;
+      track.scrollLeft=sl-(e.clientX-sx);
+    });
+    const endDrag=e=>{
+      if(!drag)return;drag=false;
+      track.classList.remove('dragging');
+      const moved=Math.abs((e.clientX||lx)-sx);
+      if(moved>4)go(Math.round((track.scrollLeft-vel*110)/step()));
+      else ui();
+    };
+    window.addEventListener('mouseup',endDrag);
+    window.addEventListener('mouseleave',endDrag);
+    track.addEventListener('dragstart',e=>e.preventDefault());
+    track.tabIndex=0;
+    track.addEventListener('keydown',e=>{
+      if(e.key==='ArrowLeft'){e.preventDefault();go(idx()-1);}
+      if(e.key==='ArrowRight'){e.preventDefault();go(idx()+1);}
+    });
+    let resizeT;
+    window.addEventListener('resize',()=>{
+      clearTimeout(resizeT);resizeT=setTimeout(()=>go(idx(),true),120);
+    });
+    ui();
+  })();
+
+  ScrollTrigger.refresh();
+}
+
+// ── Kick off page now that all functions are defined ──
+initPage();
+
+})();
+</script>
+
+
+
+</body>
+
+</html>
