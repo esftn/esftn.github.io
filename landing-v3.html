@@ -1,4 +1,5 @@
 
+
 <!doctype html>
 <html lang="en">
 
@@ -14,8 +15,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
-  <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
   <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
 <style>
@@ -185,7 +184,7 @@ button {
   overflow: hidden;
 }
 
-@media (min-width: 601px) {
+/* @media (min-width: 601px) {
   .carousel-wrap {
     -webkit-mask: linear-gradient(
       to right,
@@ -202,13 +201,12 @@ button {
       transparent 100%
     );
   }
-}
+} */
 
 .carousel-track {
   display: flex;
   gap: 3px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -223,7 +221,6 @@ button {
 
 .carousel-track.dragging {
   cursor: grabbing;
-  scroll-snap-type: none;
 }
 
 @media (pointer: coarse) {
@@ -236,7 +233,6 @@ button {
   flex: 0 0 calc((100% - 4 * 3px) / 5);
   aspect-ratio: 0.5;
   overflow: hidden;
-  scroll-snap-align: start;
   flex-shrink: 0;
 }
 
@@ -306,6 +302,56 @@ button {
   .car-btn {
     width: 35px;
   }
+}
+
+/* ── Carousel scroll indicator ── */
+.car-scrubber {
+  padding: clamp(12px, 2vw, 18px) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.car-scrubber-bar {
+  position: relative;
+  width: 100%;
+  height: 1.5px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 2px;
+}
+
+.car-scrubber-thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: #000;
+  border-radius: 2px;
+  will-change: left, width;
+  /* JS drives left/width directly — no CSS transition (avoids lag) */
+}
+
+.car-scrubber-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(11px, 1.4vw, 15px);
+  letter-spacing: 0.14em;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#carIdxLabel {
+  color: #000;
+}
+
+#carTotalLabel {
+  color: rgba(0,0,0,0.28);
+  transition: color 0.35s ease;
+}
+
+#carTotalLabel.at-end {
+  color: #000;
 }
 
 .discover-row {
@@ -892,19 +938,19 @@ section#store {
     <div class="hella-stores">
       <a href="https://au.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop AU/Asia">
         <div class="hella-flag">
-          <img src="https://flagcdn.com/w320/au.png" alt="Australia flag" loading="lazy" />
+          <img src="images/au-flag.png" alt="Australia flag" loading="lazy" />
         </div>
         <span class="hella-store-label">Shop AU/Asia</span>
       </a>
       <a href="https://uk.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop UK/EU">
         <div class="hella-flag">
-          <img src="https://flagcdn.com/w320/gb.png" alt="UK flag" loading="lazy" />
+          <img src="images/uk-flag.png" alt="UK flag" loading="lazy" />
         </div>
         <span class="hella-store-label">Shop UK/EU</span>
       </a>
       <a href="https://us.hellaheels.com/collections/hoah" target="_blank" rel="noopener" class="hella-store" aria-label="Shop US/CA">
         <div class="hella-flag">
-          <img src="https://flagcdn.com/w320/us.png" alt="US flag" loading="lazy" />
+          <img src="images/us-flag.png" alt="US flag" loading="lazy" />
         </div>
         <span class="hella-store-label">Shop US/CA</span>
       </a>
@@ -958,6 +1004,17 @@ section#store {
             src="images/SLINGA IMAGES SCROLLER/9 HOAH_Infinity_Slinga_II_All_in_One_Bikini_Black_Smoke_Show_Swimwear_Lingerie_Pole_Dance_Multiple_Bodysuit.jpg"
             alt="" loading="lazy" />
         </div>
+      </div>
+    </div>
+
+    <!-- scroll indicator -->
+    <div class="car-scrubber" id="carScrubber">
+      <div class="car-scrubber-bar">
+        <div class="car-scrubber-thumb" id="carThumb"></div>
+      </div>
+      <div class="car-scrubber-labels">
+        <span id="carIdxLabel">01</span>
+        <span id="carTotalLabel">09</span>
       </div>
     </div>
 
@@ -1162,30 +1219,6 @@ function initPage() {
     track.addEventListener('mouseup',   ()=>gsap.to(ring,{width:60,height:60,duration:.2}));
   }
 
-  /* ── Header entrance (post-loader) ──────────────── */
-  // gsap.fromTo('#siteHeader',
-  //   { yPercent: -100, opacity: 0 },
-  //   { yPercent: 0, opacity: 1, duration: 1.1, ease: 'expo.out', delay: 0.05 }
-  // );
-
-  /* ── Hero parallax ────────────────────────── */
-  // const heroImg = document.getElementById('heroImg');
-  // gsap.fromTo(heroImg,
-  //   { scale: 1.08 },
-  //   { scale: 1, duration: 1.6, ease: 'expo.out', delay: 0.1 }
-  // );
-  // // Parallax on scroll
-  // gsap.to(heroImg, {
-  //   yPercent: -12,
-  //   ease: 'none',
-  //   scrollTrigger: {
-  //     trigger: '#hero',
-  //     start: 'top top',
-  //     end: 'bottom top',
-  //     scrub: 1.4
-  //   }
-  // });
-
   /* ── Hella Heels section ─────────────── */
   gsap.fromTo('#hella .hella-title',
     { opacity: 0, y: 20 },
@@ -1363,61 +1396,151 @@ function initPage() {
      CAROUSEL ENGINE
   ══════════════════════════════════ */
   (function carousel(){
-    const track=document.getElementById('carTrack');
-    const prev =document.getElementById('carPrev');
-    const next =document.getElementById('carNext');
-    const items=Array.from(track.querySelectorAll('.carousel-item'));
-    const step =()=>items[0].getBoundingClientRect().width+3;
-    const idx  =()=>Math.round(track.scrollLeft/step());
-    const go=(i,instant)=>{
-      const t=Math.max(0,Math.min(items.length-1,i))*step();
-      if(instant){track.scrollLeft=t;return;}
-      gsap.to(track,{scrollLeft:t,duration:.5,ease:'power3.out',onUpdate:ui});
+    const track      = document.getElementById('carTrack');
+    const prev       = document.getElementById('carPrev');
+    const next       = document.getElementById('carNext');
+    const thumb      = document.getElementById('carThumb');
+    const idxLabel   = document.getElementById('carIdxLabel');
+    const totalLabel = document.getElementById('carTotalLabel');
+    const items      = Array.from(track.querySelectorAll('.carousel-item'));
+    const pad        = n => String(n).padStart(2,'0');
+
+    totalLabel.textContent = pad(items.length);
+
+    const itemW   = () => items[0].getBoundingClientRect().width + 3;
+    const maxSL   = () => track.scrollWidth - track.clientWidth;
+    const clamp   = (v,lo,hi) => Math.max(lo, Math.min(hi, v));
+    const snapIdx = () => Math.round(track.scrollLeft / itemW());
+
+    /* ── scrubber ── */
+    const updateScrubber = () => {
+      const max  = maxSL();
+      const prog = max > 0 ? track.scrollLeft / max : 0;
+      const tw   = (track.clientWidth / track.scrollWidth) * 100;
+      thumb.style.width = tw + '%';
+      thumb.style.left  = (prog * (100 - tw)) + '%';
+      const cur = snapIdx() + 1;
+      idxLabel.textContent = pad(cur);
+      // at-end when scrolled to (or very near) the maximum position
+      const atEnd = track.scrollLeft >= max - 2;
+      totalLabel.classList.toggle('at-end', atEnd);
     };
-    const ui=()=>{
-      prev.disabled=track.scrollLeft<=1;
-      next.disabled=track.scrollLeft>=(track.scrollWidth-track.clientWidth-1);
+
+    const updateUI = () => {
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= maxSL() - 1;
+      updateScrubber();
     };
-    prev.addEventListener('click',()=>go(idx()-1));
-    next.addEventListener('click',()=>go(idx()+1));
-    let snapT;
-    track.addEventListener('scroll',()=>{
-      ui();clearTimeout(snapT);
-      snapT=setTimeout(()=>{if(!drag)go(idx());},80);
-    },{passive:true});
-    let drag=false,sx=0,sl=0,lx=0,lt=0,vel=0;
-    track.addEventListener('mousedown',e=>{
-      drag=true;sx=e.clientX;sl=track.scrollLeft;
-      lx=e.clientX;lt=performance.now();vel=0;
-      track.classList.add('dragging');e.preventDefault();
+
+    /* ── GSAP-driven scroll — the only way anything moves ── */
+    const scrollTo = (x, dur = 0.52, ease = 'power3.out') => {
+      gsap.to(track, {
+        scrollLeft: clamp(x, 0, maxSL()),
+        duration: dur,
+        ease,
+        overwrite: true,
+        onUpdate: updateUI
+      });
+    };
+
+    const snapTo = (i, dur) =>
+      scrollTo(clamp(i, 0, items.length - 1) * itemW(), dur);
+
+    /* ── buttons ── */
+    prev.addEventListener('click', () => snapTo(snapIdx() - 1));
+    next.addEventListener('click', () => snapTo(snapIdx() + 1));
+
+    /* ── native scroll listener — keeps scrubber in sync during touch/momentum ── */
+    track.addEventListener('scroll', updateUI, { passive: true });
+
+    /* ── touch: snap on finger-lift ── */
+    track.addEventListener('touchend', () => {
+      setTimeout(() => snapTo(snapIdx(), 0.4), 20);
+    }, { passive: true });
+
+    /* ── trackpad (wheel with deltaX) ── */
+    let wheeling = false;
+    let wheelTarget = 0;
+    let wheelEndT;
+
+    track.addEventListener('wheel', e => {
+      const dx = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : 0;
+      if (dx === 0) return;
+      e.preventDefault();
+
+      if (!wheeling) {
+        wheeling = true;
+        wheelTarget = track.scrollLeft;
+        gsap.killTweensOf(track); // stop any snap animation mid-gesture
+      }
+
+      wheelTarget = clamp(wheelTarget + dx, 0, maxSL());
+      gsap.to(track, {
+        scrollLeft: wheelTarget,
+        duration: 0.25,
+        ease: 'power1.out',
+        overwrite: true,
+        onUpdate: updateUI
+      });
+
+      clearTimeout(wheelEndT);
+      wheelEndT = setTimeout(() => {
+        wheeling = false;
+        wheelTarget = track.scrollLeft;
+        snapTo(snapIdx(), 0.42);
+      }, 160);
+    }, { passive: false });
+
+    /* ── mouse drag ── */
+    let drag = false, sx = 0, sl = 0, lx = 0, lt = 0, vel = 0;
+
+    track.addEventListener('mousedown', e => {
+      drag = true; sx = e.clientX; sl = track.scrollLeft;
+      lx = e.clientX; lt = performance.now(); vel = 0;
+      gsap.killTweensOf(track);
+      track.classList.add('dragging');
+      e.preventDefault();
     });
-    window.addEventListener('mousemove',e=>{
-      if(!drag)return;
-      const now=performance.now();
-      vel=(e.clientX-lx)/Math.max(now-lt,1);
-      lx=e.clientX;lt=now;
-      track.scrollLeft=sl-(e.clientX-sx);
+
+    window.addEventListener('mousemove', e => {
+      if (!drag) return;
+      const now = performance.now();
+      vel = (e.clientX - lx) / Math.max(now - lt, 1);
+      lx = e.clientX; lt = now;
+      track.scrollLeft = sl - (e.clientX - sx);
+      updateUI();
     });
-    const endDrag=e=>{
-      if(!drag)return;drag=false;
+
+    const endDrag = e => {
+      if (!drag) return;
+      drag = false;
       track.classList.remove('dragging');
-      const moved=Math.abs((e.clientX||lx)-sx);
-      if(moved>4)go(Math.round((track.scrollLeft-vel*110)/step()));
-      else ui();
+      const moved = Math.abs((e.clientX || lx) - sx);
+      if (moved > 6)
+        snapTo(Math.round(clamp(track.scrollLeft - vel * 120, 0, maxSL()) / itemW()));
+      else
+        snapTo(snapIdx());
     };
-    window.addEventListener('mouseup',endDrag);
-    window.addEventListener('mouseleave',endDrag);
-    track.addEventListener('dragstart',e=>e.preventDefault());
-    track.tabIndex=0;
-    track.addEventListener('keydown',e=>{
-      if(e.key==='ArrowLeft'){e.preventDefault();go(idx()-1);}
-      if(e.key==='ArrowRight'){e.preventDefault();go(idx()+1);}
+
+    window.addEventListener('mouseup',    endDrag);
+    window.addEventListener('mouseleave', endDrag);
+    track.addEventListener('dragstart', e => e.preventDefault());
+
+    /* ── keyboard ── */
+    track.tabIndex = 0;
+    track.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); snapTo(snapIdx() - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); snapTo(snapIdx() + 1); }
     });
+
+    /* ── resize ── */
     let resizeT;
-    window.addEventListener('resize',()=>{
-      clearTimeout(resizeT);resizeT=setTimeout(()=>go(idx(),true),120);
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(() => { wheelTarget = track.scrollLeft; snapTo(snapIdx(), 0); updateUI(); }, 120);
     });
-    ui();
+
+    updateUI();
   })();
 
   ScrollTrigger.refresh();
