@@ -1,5 +1,6 @@
 
 
+
 <!doctype html>
 <html lang="en">
 
@@ -223,9 +224,18 @@ button {
   cursor: grabbing;
 }
 
+/* ── Touch devices: let the browser handle scroll natively with snap.
+   No JS animation runs on touch — this prevents the flicker caused
+   by GSAP and native momentum scroll fighting each other. ── */
 @media (pointer: coarse) {
   .carousel-track {
     cursor: auto;
+    scroll-snap-type: x mandatory;
+    /* Disable momentum decay so snap fires cleanly on lift */
+    -webkit-overflow-scrolling: auto;
+  }
+  .carousel-item {
+    scroll-snap-align: start;
   }
 }
 
@@ -1453,10 +1463,15 @@ function initPage() {
     /* ── native scroll listener — keeps scrubber in sync during touch/momentum ── */
     track.addEventListener('scroll', updateUI, { passive: true });
 
-    /* ── touch: snap on finger-lift ── */
-    track.addEventListener('touchend', () => {
-      setTimeout(() => snapTo(snapIdx(), 0.4), 20);
-    }, { passive: true });
+    /* ── touch: CSS scroll-snap handles the snapping natively (no JS needed).
+       We only update the scrubber after the scroll settles. ── */
+    if (isTouch) {
+      let touchScrollT;
+      track.addEventListener('scroll', () => {
+        clearTimeout(touchScrollT);
+        touchScrollT = setTimeout(updateUI, 80);
+      }, { passive: true });
+    }
 
     /* ── trackpad (wheel with deltaX) ── */
     let wheeling = false;
