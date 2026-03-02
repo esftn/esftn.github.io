@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -945,17 +944,17 @@ body.loading {
 
     <picture>
       <!-- Mobile hero -->
-      <source media="(max-width: 767px)" srcset=",," sizes="100vw">
-      images/MOBILE-HERO-BANNER.jpg 480w
-      images/MOBILE-HERO-BANNER.jpg 720w
+      <source media="(max-width: 767px)" srcset="
+      images/MOBILE-HERO-BANNER.jpg 480w,
+      images/MOBILE-HERO-BANNER.jpg 720w,
       images/MOBILE-HERO-BANNER.jpg 900w
-    
+    " sizes="100vw">
       <!-- Desktop hero -->
-      <source media="(min-width: 768px)" srcset=",," sizes="100vw">
-      images/WEB-HERO-BANNER.jpg 800w
-      images/WEB-HERO-BANNER.jpg 1200w
+      <source media="(min-width: 768px)" srcset="
+      images/WEB-HERO-BANNER.jpg 800w,
+      images/WEB-HERO-BANNER.jpg 1200w,
       images/WEB-HERO-BANNER.jpg 1600w
-    
+    " sizes="100vw">
       <img id="heroImg" class="hero-img" src="images/WEB-HERO-BANNER.jpg" alt="HOAH Collective collage" loading="eager"
         fetchpriority="high" decoding="async">
     </picture>
@@ -1028,50 +1027,50 @@ body.loading {
     <div class="cat-grid" id="catGrid">
       <div class="cat-cell">
         <img src="images/KINI IMAGES/SPARKLE KINIS.png"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/SPARKLE KINIS.png 300w
+          srcset="
+              images/KINI IMAGES/SPARKLE KINIS.png 300w,
               images/KINI IMAGES/SPARKLE KINIS.png 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Sparkle Kinis</span>
       </div>
       <div class="cat-cell">
         <img src="images/KINI IMAGES/METALLIC KINIS.jpg"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/METALLIC KINIS.jpg 300w
+          srcset="
+              images/KINI IMAGES/METALLIC KINIS.jpg 300w,
               images/KINI IMAGES/METALLIC KINIS.jpg 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Metallic Kinis</span>
       </div>
       <div class="cat-cell">
         <img src="images/KINI IMAGES/NEON KINIS.jpg"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/NEON KINIS.jpg 300w
+          srcset="
+              images/KINI IMAGES/NEON KINIS.jpg 300w,
               images/KINI IMAGES/NEON KINIS.jpg 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Neon Kinis</span>
       </div>
       <div class="cat-cell">
         <img src="images/KINI IMAGES/LEOPARD KINIS.JPG"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/LEOPARD KINIS.JPG 300w
+          srcset="
+              images/KINI IMAGES/LEOPARD KINIS.JPG 300w,
               images/KINI IMAGES/LEOPARD KINIS.JPG 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Leopard Kinis</span>
       </div>
       <div class="cat-cell">
         <img src="images/KINI IMAGES/SEQUIN KINIS.png"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/SEQUIN KINIS.png 300w
+          srcset="
+              images/KINI IMAGES/SEQUIN KINIS.png 300w,
               images/KINI IMAGES/SEQUIN KINIS.png 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Sequin Kinis</span>
       </div>
       <div class="cat-cell">
         <img src="images/KINI IMAGES/KINI COVERUPS.png"
-          srcset="," sizes="50vw" alt="" loading="lazy" />
-              images/KINI IMAGES/KINI COVERUPS.png 300w
+          srcset="
+              images/KINI IMAGES/KINI COVERUPS.png 300w,
               images/KINI IMAGES/KINI COVERUPS.png 600w
-            
+            " sizes="50vw" alt="" loading="lazy" />
         <span class="cat-label">Kini Coverups</span>
       </div>
     </div>
@@ -1204,74 +1203,71 @@ function scheduleReel(frame) {
   }, frameDelay);
 }
 
-// ── Counter + reel: wait for images via imagesLoaded ──────────────
-let progTween = null;
-let prog      = { val: 0 };
-const TOTAL   = reelImgs.length;
+// ── Loader timing ─────────────────────────────────────────────────
+// Two independent conditions must BOTH be true before reveal:
+//   1. Images are ready (imagesLoaded 'always' fired)
+//   2. Minimum display time has passed (counter reached 100)
+// This guarantees the reel is always seen clearly, on any network speed.
 
-// Phase 1: real image-load progress (0 → 85) via imagesLoaded progress events
-// Phase 2: counter runs 85 → 100 over 0.6s once all images confirmed loaded
-// Safety: if imagesLoaded stalls >8s, force-complete anyway
+const MIN_DURATION = 3.8;   // seconds — counter always takes at least this long
+const SAFETY_MS    = 10000; // hard timeout in case imagesLoaded stalls
 
-function startCounter() {
-  // Reel kicks off on first frame
-  showFrame(0);
-  scheduleReel(1);
+let imagesReady  = false;
+let counterDone  = false;
+let reelStarted  = false;
+let prog         = { val: 0 };
 
-  // Tween counter from wherever it is now → 100
-  const remaining = 100 - Math.round(prog.val);
-  progTween = gsap.to(prog, {
-    val     : 100,
-    duration: Math.max(0.5, remaining * 0.012), // ~0.6s for last 15%
-    ease    : 'power1.inOut',
-    onUpdate() {
-      const v = Math.round(prog.val);
-      loaderNum.textContent     = v;
-      loaderCounter.textContent = String(v).padStart(3, '0');
-      loaderLine.style.width    = v + '%';
-      frameDelay = Math.max(52, 210 - (v / 100) * 158);
-    },
-    onComplete: revealPage
-  });
+function tryReveal() {
+  if (imagesReady && counterDone) revealPage();
 }
 
-// Safety timeout — never hang longer than 8s regardless of network
-const safetyTimer = setTimeout(() => {
-  if (progTween) progTween.kill();
-  startCounter();
-}, 8000);
+function startReel() {
+  if (reelStarted) return;
+  reelStarted = true;
+  showFrame(0);
+  scheduleReel(1);
+}
 
-// imagesLoaded: track per-image progress before all are ready
-const imgLoader = imagesLoaded(loaderReel, { background: false });
-
-let loadedCount = 0;
-
-imgLoader.on('progress', () => {
-  loadedCount++;
-  // Drive counter from 0 → 85 proportionally as each image loads
-  const target = Math.round((loadedCount / TOTAL) * 85);
-  if (target > Math.round(prog.val)) {
-    gsap.to(prog, {
-      val     : target,
-      duration: 0.25,
-      ease    : 'power2.out',
-      overwrite: true,
-      onUpdate() {
-        const v = Math.round(prog.val);
-        loaderNum.textContent     = v;
-        loaderCounter.textContent = String(v).padStart(3, '0');
-        loaderLine.style.width    = v + '%';
-      }
-    });
+// ── Counter: always runs for exactly MIN_DURATION ──────────────────
+// Ticks 0 → 100 over MIN_DURATION seconds regardless of network speed.
+// Frame delay also accelerates in sync with counter progress.
+gsap.to(prog, {
+  val     : 100,
+  duration: MIN_DURATION,
+  ease    : 'power1.inOut',
+  delay   : 0.1,
+  onUpdate() {
+    const v = Math.round(prog.val);
+    loaderNum.textContent     = v;
+    loaderCounter.textContent = String(v).padStart(3, '0');
+    loaderLine.style.width    = v + '%';
+    // Reel accelerates 210ms → 52ms as counter climbs
+    frameDelay = Math.max(52, 210 - (v / 100) * 158);
+  },
+  onComplete() {
+    counterDone = true;
+    tryReveal();
   }
 });
 
-imgLoader.on('always', () => {
-  // All images settled (loaded or broken) — clear safety, finish counter
-  clearTimeout(safetyTimer);
-  // Small visual pause at ~85 so the reel has a beat to start
-  setTimeout(startCounter, 120);
-});
+// ── imagesLoaded: start reel the moment images are confirmed ready ─
+// Reel will not show blank/broken frames — it only starts after 'always'.
+// If images finish loading before counter is done, reel plays for remaining time.
+// If images finish after counter, reveal happens right away.
+const safetyTimer = setTimeout(() => {
+  // Hard fallback — treat as ready even if imagesLoaded stalled
+  imagesReady = true;
+  startReel();
+  tryReveal();
+}, SAFETY_MS);
+
+imagesLoaded(loaderReel, { background: false })
+  .on('always', () => {
+    clearTimeout(safetyTimer);
+    imagesReady = true;
+    startReel();   // begin filmstrip — images confirmed loaded, no blank frames
+    tryReveal();   // reveal immediately if counter already finished
+  });
 
 // ── EXIT: reel freeze → FLIP logo → cross-fade → reveal ───────────
 function revealPage() {
