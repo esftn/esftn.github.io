@@ -957,9 +957,261 @@
             mix-blend-mode: difference;
             transform-origin: left center;
         }
+
+        /* ══════════════════════════════════════
+   STORE PICKER POPUP
+══════════════════════════════════════ */
+        #store-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.38s ease;
+            pointer-events: none;
+            cursor: auto;
+        }
+
+        #store-popup-overlay *,
+        #store-popup-overlay *::before,
+        #store-popup-overlay *::after {
+            cursor: auto;
+        }
+
+        #store-popup-overlay button,
+        #store-popup-overlay select {
+            cursor: pointer;
+        }
+
+        #store-popup-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #store-popup {
+            background: #0c1b1d;
+            background-image: url(../images/HOAH-HEADER-BLANK.jpg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            width: 100%;
+            max-width: 520px;
+            padding: clamp(32px, 5vw, 52px) clamp(22px, 4vw, 44px);
+            text-align: center;
+            position: relative;
+            transform: translateY(22px) scale(0.97);
+            transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        #store-popup-overlay.visible #store-popup {
+            transform: translateY(0) scale(1);
+        }
+
+        .popup-title {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(22px, 4.5vw, 34px);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            margin-bottom: 6px;
+            position: relative;
+            display: inline-block;
+            line-height: 1.1;
+        }
+
+        .popup-title::before,
+        .popup-title::after {
+            content: '✦';
+            font-size: 0.45em;
+            vertical-align: super;
+            opacity: 0.85;
+            margin: 0 6px;
+        }
+
+        .popup-sub {
+            font-family: "DM Sans", sans-serif;
+            font-size: clamp(11px, 1.6vw, 15px);
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: clamp(20px, 3vw, 28px);
+            letter-spacing: 0.03em;
+        }
+
+        /* Reuse hella-storepicker styles but scoped to popup */
+        #popup-storepicker {
+            max-width: 100%;
+            margin: 0 auto;
+            display: grid;
+            gap: 10px;
+            position: relative;
+        }
+
+        #popup-storepicker select {
+            width: 100%;
+            padding: 18px 56px 18px 20px;
+            border-radius: 0;
+            border: 2px solid #fff;
+            background: #fff;
+            color: #000;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(14px, 2.2vw, 20px);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            outline: none;
+            cursor: pointer;
+            user-select: none;
+            -webkit-appearance: none;
+            appearance: none;
+            line-height: 1;
+            font-weight: bold;
+        }
+
+        #popup-storepicker select:focus {
+            border-color: #fff;
+        }
+
+        #popup-storepicker::after {
+            content: "";
+            position: absolute;
+            right: 22px;
+            top: 20px;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        @media (min-width: 768px) {
+            #popup-storepicker::after {
+                top: 21px;
+            }
+        }
+
+        @media (pointer: coarse) {
+            #popup-storepicker select {
+                cursor: auto;
+            }
+        }
+
+        .popup-store-msg {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(14px, 2vw, 18px);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.92);
+            min-height: 1.2em;
+        }
+
+        .popup-confirm-btn {
+            width: 100%;
+            padding: 15px 20px;
+            background: #fff;
+            color: #000;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(14px, 2.2vw, 20px);
+            letter-spacing: 0.06em;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: background 0.22s, color 0.22s;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .popup-confirm-btn.show {
+            display: block;
+        }
+
+        .popup-confirm-btn:hover {
+            background: transparent;
+            color: #fff;
+        }
+
+        .popup-dismiss {
+            width: 100%;
+            display: flex;
+            margin-top: clamp(14px, 2.2vw, 20px);
+            font-family: "DM Sans", sans-serif;
+            font-size: clamp(11px, 1.4vw, 13px);
+            color: rgba(255, 255, 255, 0.42);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            border: none;
+            background: none;
+            transition: color 0.2s;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .popup-dismiss:hover {
+            color: rgba(255, 255, 255, 0.75);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .popup-close-x {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.45;
+            transition: opacity 0.2s;
+        }
+
+        .popup-close-x:hover {
+            opacity: 1;
+        }
+
+        .popup-close-x::before,
+        .popup-close-x::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 1.5px;
+            background: #fff;
+        }
+
+        .popup-close-x::before { transform: rotate(45deg); }
+        .popup-close-x::after  { transform: rotate(-45deg); }
     </style>
 
 <body>
+    <!-- ══════ STORE PICKER POPUP ══════ -->
+    <div id="store-popup-overlay" role="dialog" aria-modal="true" aria-label="Choose your store">
+        <div id="store-popup">
+            <button class="popup-close-x" id="popupCloseX" aria-label="Dismiss"></button>
+            <h2 class="popup-title">Where are you shopping from?</h2>
+            <p class="popup-sub">Pick your region to shop the right store</p>
+            <div id="popup-storepicker">
+                <select id="popupStoreSelect" aria-label="Choose your store">
+                    <option value="">Choose your location</option>
+                    <option value="au">AU/Asia — Hella Heels AU</option>
+                    <option value="uk">UK/EU — CXIX UK</option>
+                    <option value="us">US/CA — Hella Heels US</option>
+                </select>
+                <div class="popup-store-msg" id="popupStoreMsg"></div>
+                <button class="popup-confirm-btn" id="popupConfirmBtn">Shop This Store →</button>
+            </div>
+            <button class="popup-dismiss" id="popupDismiss">No thanks, I'll browse first</button>
+        </div>
+    </div>
+
     <!-- ══════ SCROLL PROGRESS ══════ -->
     <div id="scroll-prog"></div>
 
@@ -986,22 +1238,22 @@
           images/WEB-HERO-BANNER.jpg  1000w,
           images/WEB-HERO-BANNER.jpg 1600w
         " sizes="100vw" alt="HOAH Collective collage" loading="eager" fetchpriority="high" /> -->
-        <picture>
-            <!-- Mobile hero -->
-            <source media="(max-width: 767px)" srcset="
-        images/MOBILE-HERO-BANNER.jpg 480w,
-        images/MOBILE-HERO-BANNER.jpg 720w,
-        images/MOBILE-HERO-BANNER.jpg 900w
-        " sizes="100vw">
-            <!-- Desktop hero -->
-            <source media="(min-width: 768px)" srcset="
-        images/WEB-HERO-BANNER.jpg 800w,
-        images/WEB-HERO-BANNER.jpg 1200w,
-        images/WEB-HERO-BANNER.jpg 1600w
-        " sizes="100vw">
-            <img id="heroImg" class="hero-img" src="images/WEB-HERO-BANNER.jpg" alt="HOAH Collective collage"
-                loading="eager" fetchpriority="high" decoding="async">
-        </picture>
+    <picture>
+      <!-- Mobile hero -->
+      <source media="(max-width: 767px)" srcset="
+      images/MOBILE-HERO-BANNER.jpg 480w,
+      images/MOBILE-HERO-BANNER.jpg 720w,
+      images/MOBILE-HERO-BANNER.jpg 900w
+    " sizes="100vw">
+      <!-- Desktop hero -->
+      <source media="(min-width: 768px)" srcset="
+      images/WEB-HERO-BANNER.jpg 800w,
+      images/WEB-HERO-BANNER.jpg 1200w,
+      images/WEB-HERO-BANNER.jpg 1600w
+    " sizes="100vw">
+      <img id="heroImg" class="hero-img" src="images/WEB-HERO-BANNER.jpg" alt="HOAH Collective collage" loading="eager"
+        fetchpriority="high" decoding="async">
+    </picture>
     </section>
     <!-- ══════ STOCKED ON HELLA HEELS ══════ -->
     <section class="hella-section" id="hella-locations">
@@ -1099,6 +1351,36 @@
                     rel="noopener" target="_blank">
                     <img alt="" loading="lazy"
                         src="images/SLINGA IMAGES SCROLLER/9 HOAH_Infinity_Slinga_II_All_in_One_Bikini_Black_Smoke_Show_Swimwear_Lingerie_Pole_Dance_Multiple_Bodysuit.jpg" />
+                </a>
+                <a aria-label="Slinga product 10" class="carousel-item slinga-link" data-store-link="slinga_10" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER/10 Lovergirl Red_Pink.jpg" />
+                </a>
+                <a aria-label="Slinga product 11" class="carousel-item slinga-link" data-store-link="slinga_11" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER/11 Mermaid Emerald.jpg" />
+                </a>
+                <a aria-label="Slinga product 12" class="carousel-item slinga-link" data-store-link="slinga_12" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER/12 Mermaid Lilac.jpg" />
+                </a>
+                <a aria-label="Slinga product 13" class="carousel-item slinga-link" data-store-link="slinga_13" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER/13 Tartan.jpg" />
+                </a>
+                <a aria-label="Slinga product 14" class="carousel-item slinga-link" data-store-link="slinga_14" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER/14 Toffee Trap.jpg" />
+                </a>
+                <a aria-label="Slinga product 15" class="carousel-item slinga-link" data-store-link="slinga_15" href="#"
+                    rel="noopener" target="_blank">
+                    <img alt="" loading="lazy"
+                        src="images/SLINGA IMAGES SCROLLER//15 White Rainbow Sparkle.png" />
                 </a>
             </div>
         </div>
@@ -1847,60 +2129,78 @@
                     // ── DEFINE YOUR STORE LINKS HERE ──
                     const STORE_LINKS = {
                         au: {
-                            slinga_01: 'https://au.hellaheels.com/products/placeholder-slinga-01',
-                            slinga_02: 'https://au.hellaheels.com/products/placeholder-slinga-02',
-                            slinga_03: 'https://au.hellaheels.com/products/placeholder-slinga-03',
-                            slinga_04: 'https://au.hellaheels.com/products/placeholder-slinga-04',
-                            slinga_05: 'https://au.hellaheels.com/products/placeholder-slinga-05',
-                            slinga_06: 'https://au.hellaheels.com/products/placeholder-slinga-06',
-                            slinga_07: 'https://au.hellaheels.com/products/placeholder-slinga-07',
-                            slinga_08: 'https://au.hellaheels.com/products/placeholder-slinga-08',
-                            slinga_09: 'https://au.hellaheels.com/products/placeholder-slinga-09',
+                            slinga_01: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_02: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_03: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_04: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_05: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_06: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_07: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_08: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_09: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_10: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_11: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_12: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_13: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_14: 'https://au.hellaheels.com/collections/hoah-slingas',
+                            slinga_15: 'https://au.hellaheels.com/collections/hoah-slingas',
 
-                            cat_sparkle_kinis: 'https://au.hellaheels.com/collections/placeholder-sparkle',
-                            cat_metallic_kinis: 'https://au.hellaheels.com/collections/placeholder-metallic',
-                            cat_neon_kinis: 'https://au.hellaheels.com/collections/placeholder-neon',
-                            cat_leopard_kinis: 'https://au.hellaheels.com/collections/placeholder-leopard',
-                            cat_sequin_kinis: 'https://au.hellaheels.com/collections/placeholder-sequin',
-                            cat_kini_coverups: 'https://au.hellaheels.com/collections/placeholder-coverups',
+                            cat_sparkle_kinis: 'https://au.hellaheels.com/collections/sparkle-kinis',
+                            cat_metallic_kinis: 'https://au.hellaheels.com/collections/metallic-kinis',
+                            cat_neon_kinis: 'https://au.hellaheels.com/collections/neon-kinis',
+                            cat_leopard_kinis: 'https://au.hellaheels.com/collections/leopard-kinis',
+                            cat_sequin_kinis: 'https://au.hellaheels.com/collections/sequin-kinis',
+                            cat_kini_coverups: 'https://au.hellaheels.com/collections/kini-coverups',
                         },
 
                         uk: {
-                            slinga_01: 'https://cxix.com/products/placeholder-slinga-01',
-                            slinga_02: 'https://cxix.com/products/placeholder-slinga-02',
-                            slinga_03: 'https://cxix.com/products/placeholder-slinga-03',
-                            slinga_04: 'https://cxix.com/products/placeholder-slinga-04',
-                            slinga_05: 'https://cxix.com/products/placeholder-slinga-05',
-                            slinga_06: 'https://cxix.com/products/placeholder-slinga-06',
-                            slinga_07: 'https://cxix.com/products/placeholder-slinga-07',
-                            slinga_08: 'https://cxix.com/products/placeholder-slinga-08',
-                            slinga_09: 'https://cxix.com/products/placeholder-slinga-09',
+                            slinga_01: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_02: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_03: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_04: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_05: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_06: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_07: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_08: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_09: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_10: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_11: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_12: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_13: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_14: 'https://cxix.com/collections/hoah-slinga',
+                            slinga_15: 'https://cxix.com/collections/hoah-slinga',
 
-                            cat_sparkle_kinis: 'https://cxix.com/collections/placeholder-sparkle',
-                            cat_metallic_kinis: 'https://cxix.com/collections/placeholder-metallic',
-                            cat_neon_kinis: 'https://cxix.com/collections/placeholder-neon',
-                            cat_leopard_kinis: 'https://cxix.com/collections/placeholder-leopard',
-                            cat_sequin_kinis: 'https://cxix.com/collections/placeholder-sequin',
-                            cat_kini_coverups: 'https://cxix.com/collections/placeholder-coverups',
+                            cat_sparkle_kinis: 'https://cxix.com/collections/sparkle-kinis',
+                            cat_metallic_kinis: 'https://cxix.com/collections/metallic-kinis',
+                            cat_neon_kinis: 'https://cxix.com/collections/neon-kinis',
+                            cat_leopard_kinis: 'https://cxix.com/collections/leopard-kinis',
+                            cat_sequin_kinis: 'https://cxix.com/collections/sequin-kinis',
+                            cat_kini_coverups: 'https://cxix.com/collections/kini-coverups',
                         },
 
                         us: {
-                            slinga_01: 'https://us.hellaheels.com/products/placeholder-slinga-01',
-                            slinga_02: 'https://us.hellaheels.com/products/placeholder-slinga-02',
-                            slinga_03: 'https://us.hellaheels.com/products/placeholder-slinga-03',
-                            slinga_04: 'https://us.hellaheels.com/products/placeholder-slinga-04',
-                            slinga_05: 'https://us.hellaheels.com/products/placeholder-slinga-05',
-                            slinga_06: 'https://us.hellaheels.com/products/placeholder-slinga-06',
-                            slinga_07: 'https://us.hellaheels.com/products/placeholder-slinga-07',
-                            slinga_08: 'https://us.hellaheels.com/products/placeholder-slinga-08',
-                            slinga_09: 'https://us.hellaheels.com/products/placeholder-slinga-09',
+                            slinga_01: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_02: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_03: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_04: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_05: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_06: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_07: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_08: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_09: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_10: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_11: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_12: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_13: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_14: 'https://us.hellaheels.com/collections/hoah-slingas',
+                            slinga_15: 'https://us.hellaheels.com/collections/hoah-slingas',
 
-                            cat_sparkle_kinis: 'https://us.hellaheels.com/collections/placeholder-sparkle',
-                            cat_metallic_kinis: 'https://us.hellaheels.com/collections/placeholder-metallic',
-                            cat_neon_kinis: 'https://us.hellaheels.com/collections/placeholder-neon',
-                            cat_leopard_kinis: 'https://us.hellaheels.com/collections/placeholder-leopard',
-                            cat_sequin_kinis: 'https://us.hellaheels.com/collections/placeholder-sequin',
-                            cat_kini_coverups: 'https://us.hellaheels.com/collections/placeholder-coverups',
+                            cat_sparkle_kinis: 'https://us.hellaheels.com/collections/sparkle-kinis',
+                            cat_metallic_kinis: 'https://us.hellaheels.com/collections/metallic-kinis',
+                            cat_neon_kinis: 'https://us.hellaheels.com/collections/neon-kinis',
+                            cat_leopard_kinis: 'https://us.hellaheels.com/collections/leopard-kinis',
+                            cat_sequin_kinis: 'https://us.hellaheels.com/collections/sequin-kinis',
+                            cat_kini_coverups: 'https://us.hellaheels.com/collections/kini-coverups',
                         }
                     };
 
@@ -1955,6 +2255,145 @@
 
             // ── Kick off page now that all functions are defined ──
             initPage();
+
+            /* ══════════════════════════════════════
+               STORE PICKER POPUP
+            ══════════════════════════════════════ */
+            (function initStorePopup() {
+                const STORAGE_KEY   = 'hoah_store';
+                const overlay       = document.getElementById('store-popup-overlay');
+                const popupCard     = document.getElementById('store-popup');
+                const popupSelect   = document.getElementById('popupStoreSelect');
+                const popupMsg      = document.getElementById('popupStoreMsg');
+                const confirmBtn    = document.getElementById('popupConfirmBtn');
+                const dismissBtn    = document.getElementById('popupDismiss');
+                const closeX        = document.getElementById('popupCloseX');
+
+                // Main section references (kept in sync)
+                const mainSelect    = document.getElementById('hellaStoreSelect');
+                const mainMsg       = document.getElementById('hellaStoreMsg');
+
+                // ── localStorage helpers ──
+                function getSavedStore() {
+                    try { return localStorage.getItem(STORAGE_KEY) || ''; }
+                    catch (e) { return ''; }
+                }
+                function saveStore(val) {
+                    try { localStorage.setItem(STORAGE_KEY, val); }
+                    catch (e) { /* storage blocked — fail silently */ }
+                }
+
+                // ── Sync main section picker ──
+                function syncMainPicker(val) {
+                    if (!mainSelect) return;
+                    mainSelect.value = val;
+                    mainSelect.dispatchEvent(new Event('change'));
+                }
+
+                // ── Focus trap ──
+                const focusableSelectors = 'select, button, [href], input, textarea, [tabindex]:not([tabindex="-1"])';
+                let previouslyFocused = null;
+
+                function getFocusable() {
+                    return Array.from(popupCard.querySelectorAll(focusableSelectors))
+                        .filter(el => !el.disabled && el.offsetParent !== null);
+                }
+
+                function trapFocus(e) {
+                    if (e.key !== 'Tab') return;
+                    const focusable = getFocusable();
+                    if (!focusable.length) { e.preventDefault(); return; }
+                    const first = focusable[0];
+                    const last  = focusable[focusable.length - 1];
+                    if (e.shiftKey) {
+                        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                    } else {
+                        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+                    }
+                }
+
+                // ── Open / close ──
+                function openPopup() {
+                    previouslyFocused = document.activeElement;
+                    overlay.classList.add('visible');
+                    overlay.removeAttribute('aria-hidden');
+
+                    // Scroll lock — works on iOS too
+                    document.body.style.overflow = 'hidden';
+                    document.body.style.touchAction = 'none';
+
+                    // Focus first focusable element inside popup
+                    requestAnimationFrame(() => {
+                        const focusable = getFocusable();
+                        if (focusable.length) focusable[0].focus();
+                    });
+
+                    document.addEventListener('keydown', handleKeydown);
+                }
+
+                function closePopup() {
+                    overlay.classList.remove('visible');
+                    overlay.setAttribute('aria-hidden', 'true');
+
+                    // Release scroll lock
+                    document.body.style.overflow = '';
+                    document.body.style.touchAction = '';
+
+                    document.removeEventListener('keydown', handleKeydown);
+
+                    // Return focus to where it was before popup opened
+                    if (previouslyFocused && previouslyFocused.focus) {
+                        previouslyFocused.focus();
+                    }
+                }
+
+                function handleKeydown(e) {
+                    if (e.key === 'Escape') { closePopup(); return; }
+                    trapFocus(e);
+                }
+
+                // ── If a store is already saved, apply it silently and skip popup ──
+                const saved = getSavedStore();
+                if (saved) {
+                    syncMainPicker(saved);
+                    overlay.setAttribute('aria-hidden', 'true');
+                } else {
+                    // No saved store → show popup after brief delay
+                    overlay.setAttribute('aria-hidden', 'true');
+                    setTimeout(openPopup, 600);
+                }
+
+                // ── Popup dropdown change ──
+                popupSelect.addEventListener('change', function () {
+                    const val   = this.value;
+                    const label = this.options[this.selectedIndex].text;
+                    if (val) {
+                        popupMsg.textContent = `Selected: ${label}`;
+                        confirmBtn.classList.add('show');
+                    } else {
+                        popupMsg.textContent = '';
+                        confirmBtn.classList.remove('show');
+                    }
+                });
+
+                // ── Confirm → save, sync, close ──
+                confirmBtn.addEventListener('click', function () {
+                    const val = popupSelect.value;
+                    if (!val) return;
+                    saveStore(val);
+                    syncMainPicker(val);
+                    closePopup();
+                });
+
+                // ── Dismiss / close X → close without saving ──
+                dismissBtn.addEventListener('click', closePopup);
+                closeX.addEventListener('click', closePopup);
+
+                // ── Click outside popup card → close ──
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === overlay) closePopup();
+                });
+            })();
 
         })();
     </script>
