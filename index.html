@@ -481,16 +481,6 @@
             }
         }
 
-        .cat-cell::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 1;
-            transition: background 0.7s;
-        }
-
         @media (hover: hover) {
             .cat-cell:hover::after {
                 background: rgba(0, 0, 0, 0.08);
