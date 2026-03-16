@@ -722,6 +722,17 @@
             margin-top: clamp(8px, 1.4vw, 12px);
         }
 
+        .signup-message {
+            font-family: "DM Sans", sans-serif;
+            font-size: clamp(11px, 1.4vw, 13px);
+            margin-top: clamp(6px, 1vw, 10px);
+            min-height: 1em;
+        }
+
+        .signup-message.success { color: #2a7a2a; }
+        .signup-message.error   { color: #b00; }
+        .signup-message.hidden  { display: none; }
+
         .signup-ig {
             font-family: "Bebas Neue", sans-serif;
             font-size: clamp(16px, 2vw, 24px);
@@ -1529,15 +1540,18 @@
         <p class="signup-label">
             Sign up for early access to new releases &amp; exclusive discounts
         </p>
-        <div class="signup-row">
-            <input autocomplete="email" class="signup-input" id="emailInput" placeholder="Enter your email address"
-                type="email" />
-            <button class="signup-btn" id="signupBtn">Sign Up</button>
-        </div>
-        <p class="signup-disc">
-            By signing up for email, you are agreeing to receive email messaging
-            from HOAH. You can unsubscribe at any time.
-        </p>
+        <klaviyo-subscription-form public-api-key="TkK7zB" list-id="UnzqwL" custom-source="Homepage" success-message="Thanks for subscribing!">
+            <div class="signup-row">
+                <input class="signup-input" type="email" autocomplete="email" placeholder="Enter your email address"
+                    data-field-type="email" required>
+                <button type="button" class="signup-btn" data-field-type="submit">Sign Up</button>
+            </div>
+            <div class="signup-message" data-message=""></div>
+            <p class="signup-disc">
+                By signing up for email, you are agreeing to receive email messaging
+                from HOAH. You can unsubscribe at any time.
+            </p>
+        </klaviyo-subscription-form>
     </section>
     <div class="signup-ig">Follow us on Instagram for popups/events near you</div>
     <!-- ══════ FOOTER ══════ -->
@@ -1953,23 +1967,140 @@
                         scrollTrigger: { trigger: '.signup-ig', start: 'top 95%', once: true }
                     });
 
-                /* ── Signup logic ────────────────── */
-                const emailInput = document.getElementById('emailInput');
-                const signupBtn = document.getElementById('signupBtn');
-                signupBtn.addEventListener('click', () => {
-                    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) {
-                        signupBtn.textContent = 'Subscribed ✓';
-                        signupBtn.classList.add('done');
-                        gsap.fromTo(signupBtn, { scale: .93 }, { scale: 1, duration: .4, ease: 'back.out(2.5)' });
-                    } else {
-                        gsap.to(emailInput, {
-                            x: -6, duration: .055, yoyo: true, repeat: 8, ease: 'none',
-                            onComplete: () => gsap.set(emailInput, { x: 0 })
-                        });
-                        emailInput.focus();
+                /* ── Klaviyo signup ──────────────── */
+                if (!customElements.get('klaviyo-subscription-form')) {
+                    class KlaviyoSubscriptionForm extends HTMLElement {
+                        constructor() {
+                            super();
+                            this.onFormSubmitListener = this.onFormSubmit.bind(this);
+                        }
+
+                        get selectors() {
+                            return {
+                                fields: {
+                                    submit: "[data-field-type='submit']",
+                                    email:  "[data-field-type='email']",
+                                    phone:  "[data-field-type='phone']"
+                                },
+                                message: '[data-message]'
+                            };
+                        }
+
+                        get attributes() {
+                            return {
+                                publicApiKey:   'public-api-key',
+                                listId:         'list-id',
+                                customSource:   'custom-source',
+                                successMessage: 'success-message'
+                            };
+                        }
+
+                        get modifiers() {
+                            return {
+                                hidden: 'hidden',
+                                message: { success: 'success', error: 'error' }
+                            };
+                        }
+
+                        get messageTypes() { return { success: 'success', error: 'error' }; }
+                        get publicApiKey()   { return this.getAttribute(this.attributes.publicApiKey); }
+                        get listId()         { return this.getAttribute(this.attributes.listId); }
+                        get customSource()   { return this.getAttribute(this.attributes.customSource); }
+                        get successMessage() { return this.getAttribute(this.attributes.successMessage); }
+
+                        connectedCallback() {
+                            const submitEl = this.querySelector(this.selectors.fields.submit);
+                            if (submitEl) submitEl.addEventListener('click', this.onFormSubmitListener);
+                        }
+
+                        async onFormSubmit(event) {
+                            event.preventDefault();
+                            const { email, phoneNumber } = this.extractProfileData();
+                            const profileAttributes = { email };
+                            if (phoneNumber) profileAttributes.phone_number = phoneNumber;
+
+                            const response = await this.createClientSubscription(profileAttributes, this.customSource, this.listId);
+
+                            if (!response.ok) {
+                                const data = await response.json();
+                                console.error(data);
+                                this.onSubscriptionError(data?.errors?.[0]?.detail);
+                                return;
+                            }
+                            this.onSubscriptionSuccess(this.successMessage);
+                        }
+
+                        async createClientSubscription(profileAttributes, customSource, listId) {
+                            const url = `https://a.klaviyo.com/client/subscriptions/?company_id=${this.publicApiKey}`;
+                            if (!profileAttributes.subscriptions) profileAttributes.subscriptions = {};
+                            if (profileAttributes.email) {
+                                profileAttributes.subscriptions.email = { marketing: { consent: 'SUBSCRIBED' } };
+                            }
+                            if (profileAttributes.phone_number) {
+                                profileAttributes.subscriptions.sms = { marketing: { consent: 'SUBSCRIBED' } };
+                            }
+
+                            return await fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    revision: '2025-01-15',
+                                    'content-type': 'application/vnd.api+json'
+                                },
+                                body: JSON.stringify({
+                                    data: {
+                                        type: 'subscription',
+                                        attributes: {
+                                            ...(customSource && { custom_source: customSource }),
+                                            profile: {
+                                                data: {
+                                                    type: 'profile',
+                                                    attributes: { ...profileAttributes }
+                                                }
+                                            }
+                                        },
+                                        relationships: {
+                                            list: { data: { type: 'list', id: listId } }
+                                        }
+                                    }
+                                })
+                            });
+                        }
+
+                        extractProfileData() {
+                            return {
+                                email:       this.querySelector(this.selectors.fields.email)?.value ?? '',
+                                phoneNumber: this.querySelector(this.selectors.fields.phone)?.value ?? ''
+                            };
+                        }
+
+                        onSubscriptionError(message) {
+                            this.renderMessage(this.messageTypes.error,
+                                message ?? 'Something went wrong. Please enter valid information and try again.');
+                        }
+
+                        onSubscriptionSuccess(message) {
+                            const btn = this.querySelector(this.selectors.fields.submit);
+                            if (btn) {
+                                btn.textContent = 'Subscribed ✓';
+                                btn.classList.add('done');
+                                gsap.fromTo(btn, { scale: .93 }, { scale: 1, duration: .4, ease: 'back.out(2.5)' });
+                            }
+                            this.renderMessage(this.messageTypes.success,
+                                message ?? 'Thanks for subscribing! Check your email for a confirmation message.');
+                        }
+
+                        renderMessage(type, message) {
+                            const el = this.querySelector(this.selectors.message);
+                            if (!el) return;
+                            el.innerHTML = message;
+                            el.classList.remove(this.modifiers.message.success, this.modifiers.message.error, this.modifiers.hidden);
+                            if (type === this.messageTypes.success) el.classList.add(this.modifiers.message.success);
+                            else if (type === this.messageTypes.error) el.classList.add(this.modifiers.message.error);
+                        }
                     }
-                });
-                emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') signupBtn.click(); });
+
+                    customElements.define('klaviyo-subscription-form', KlaviyoSubscriptionForm);
+                }
 
                 /* ── Footer ──────────────────────── */
                 gsap.fromTo('#footer .footer-tag',
