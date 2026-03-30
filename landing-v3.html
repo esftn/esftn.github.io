@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -408,7 +410,7 @@
             gap: 8px;
             padding-top: clamp(12px, 1.8vw, 30px);
             padding-bottom: clamp(15px, 1.8vw, 25px);
-            justify-content: flex-end;
+            justify-content: center;
         }
 
         @media (max-width: 600px) {
@@ -479,16 +481,6 @@
             .cat-cell:hover img {
                 transform: scale(1.05);
             }
-        }
-
-        .cat-cell::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 1;
-            transition: background 0.7s;
         }
 
         @media (hover: hover) {
@@ -633,6 +625,158 @@
         }
 
         /* ══════════════════════════════════════
+   BECOME A STOCKIST
+══════════════════════════════════════ */
+        .stockist-section {
+            background: #fff;
+            padding: clamp(22px, 4vw, 48px) clamp(16px, 5vw, 64px);
+            text-align: center;
+        }
+
+        .stockist-text {
+            font-family: "DM Sans", sans-serif;
+            font-size: clamp(14px, 2vw, 22px);
+            font-weight: 600;
+            line-height: 1.55;
+            color: #000;
+            letter-spacing: 0.01em;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .stockist-text a.stockist-link {
+            color: #000;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-thickness: 2px;
+            transition: opacity 0.2s;
+            cursor: none;
+        }
+
+        .stockist-text a.stockist-link:hover {
+            opacity: 0.6;
+        }
+
+        .stockist-text .stockist-red {
+            color: #0033ff!important;
+            font-weight: 700;
+        }
+
+        /* ══════════════════════════════════════
+   STOCKIST DIRECTORY
+══════════════════════════════════════ */
+        .stockist-dir {
+            background: #0c1b1d;
+            background-image: url(images/HOAH-HEADER-BLANK.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            padding: clamp(36px, 6vw, 72px) clamp(20px, 5vw, 64px);
+        }
+
+        .stockist-dir-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(32px, 5vw, 80px);
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .stockist-dir-inner {
+                grid-template-columns: 1fr;
+                gap: clamp(28px, 8vw, 48px);
+            }
+        }
+
+        /* Left — grouped lists */
+        .stockist-dir-lists {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(20px, 3.5vw, 36px);
+        }
+
+        .stockist-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stockist-group-label {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(14px, 1.8vw, 20px);
+            letter-spacing: 0.12em;
+            color: #fff;
+            opacity: 1;
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+
+        .stockist-dir-link {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(18px, 2.8vw, 32px);
+            letter-spacing: 0.04em;
+            color: rgba(255,255,255,0.88);
+            text-decoration: none;
+            text-transform: uppercase;
+            line-height: 1.2;
+            cursor: none;
+            display: inline-block;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .stockist-dir-link::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: -2px;
+            width: 0; height: 1.5px;
+            background: #fff;
+            transition: width 0.28s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+
+        @media (hover: hover) {
+            .stockist-dir-link:hover {
+                color: #fff;
+            }
+            .stockist-dir-link:hover::after {
+                width: 100%;
+            }
+        }
+
+        .stockist-dir-link.limited {
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* Right — tagline */
+        .stockist-dir-tagline {
+            text-align: right;
+        }
+
+        @media (max-width: 640px) {
+            .stockist-dir-tagline {
+                text-align: left;
+                border-top: 1px solid rgba(255,255,255,0.12);
+                padding-top: clamp(20px, 5vw, 36px);
+            }
+        }
+
+        .stockist-dir-tagline p {
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(22px, 4.5vw, 52px);
+            line-height: 1.1;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .stockist-dir-tagline p .dash {
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ══════════════════════════════════════
    SIGN UP
 ══════════════════════════════════════ */
         .signup-section {
@@ -670,6 +814,26 @@
             margin-right: 10px;
         }
 
+        @media (max-width: 767px) {
+            .signup-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .signup-input {
+                width: 100%;
+                margin-right: 0;
+                min-height: 45px;
+            }
+
+            .signup-btn {
+                width: 100%;
+                min-width: 0;
+                padding: 14px 0;
+                font-size: clamp(22px, 6vw, 32px);
+            }
+        }
+
         @media (min-width: 768px) {
             .signup-input {
                 margin-right: 20px;
@@ -696,10 +860,9 @@
             cursor: none;
             white-space: nowrap;
             border: 2px solid #000;
-            transition:
-                background 0.25s ease,
-                color 0.25s ease;
-            padding: 5px 0;
+            transition: background 0.25s ease,
+                        color 0.25s ease;
+            padding: clamp(13px, 2.2vw, 18px) clamp(8px, 1.5vw, 14px);
         }
 
         @media (min-width: 768px) {
@@ -1347,6 +1510,41 @@
         </div>
 
     </section>
+
+    <!-- ══════ STOCKIST DIRECTORY ══════ -->
+    <section class="stockist-dir" id="stockist-dir">
+        <div class="stockist-dir-inner">
+
+            <!-- Left: grouped lists -->
+            <div class="stockist-dir-lists">
+
+                <div class="stockist-group">
+                    <span class="stockist-group-label">UK Stockists:</span>
+                    <a class="stockist-dir-link" href="https://cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX UK</a>
+                    <a class="stockist-dir-link" href="https://uk.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels UK</a>
+                </div>
+
+                <div class="stockist-group">
+                    <span class="stockist-group-label">US Stockists:</span>
+                    <a class="stockist-dir-link" href="https://us.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels US</a>
+                    <a class="stockist-dir-link limited" href="https://us.cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX US (Limited Product Range)</a>
+                </div>
+
+                <div class="stockist-group">
+                    <span class="stockist-group-label">AU Stockists:</span>
+                    <a class="stockist-dir-link" href="https://au.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels AU</a>
+                </div>
+
+            </div>
+
+            <!-- Right: tagline -->
+            <div class="stockist-dir-tagline">
+                <p>UK + AU Stockists<br>Ship Worldwide <span class="dash">–</span><br>Shop Your Location</p>
+            </div>
+
+        </div>
+    </section>
+
     <!-- ══════ BESTSELLING SLINGA ══════ -->
     <section class="slinga-section" id="slinga">
         <div id="slingaHeader">
@@ -1519,7 +1717,7 @@
         <img alt="sparkles" loading="lazy" src="images/BLACK SPARKLES.png" />
     </div>
     <!-- ══════ CHOOSE YOUR STORE ══════ -->
-    <section class="store-section" id="store">
+    <!-- <section class="store-section" id="store">
         <h2 class="store-title">HOAH Stockists</h2>
         <div class="store-btns">
             <a aria-label="AU Stockists" class="store-btn" href="https://au.hellaheels.com/collections/hoah"
@@ -1530,6 +1728,13 @@
                 target="_blank">US Stockists</a>
         </div>
         <p class="store-note">All Stockists Ship Globally</p>
+    </section> -->
+    <!-- ══════ BECOME A STOCKIST ══════ -->
+    <section class="stockist-section" id="stockist">
+        <p class="stockist-text">
+            If you are interested in becoming a HOAH stockist,<br>
+            please complete our <a class="stockist-link" href="#" target="_blank" rel="noopener">online form</a> (<a class="stockist-link stockist-red" href="#" target="_blank" rel="noopener">link</a>)
+        </p>
     </section>
     <!-- ══════ SPARKLE 2 ══════ -->
     <div class="sparkle" id="sparkle2">
@@ -1788,7 +1993,7 @@
                         ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
                         requestAnimationFrame(loop);
                     })();
-                    document.querySelectorAll('a,button,.cat-cell,.footer-ig,.store-btn,.hella-store').forEach(el => {
+                    document.querySelectorAll('a,button,.cat-cell,.footer-ig,.store-btn,.hella-store,.stockist-link,.stockist-dir-link').forEach(el => {
                         el.addEventListener('mouseenter', () => gsap.to(ring, { width: 50, height: 50, duration: .2 }));
                         el.addEventListener('mouseleave', () => gsap.to(ring, { width: 30, height: 30, duration: .2 }));
                     });
@@ -1829,6 +2034,20 @@
                         opacity: 1, y: 0, duration: 0.45, ease: 'power2.out',
                         scrollTrigger: { trigger: '#hella-locations', start: 'top 88%', once: true },
                         delay: 0.28
+                    });
+
+                /* ── Stockist directory ─────────────── */
+                gsap.fromTo('#stockist-dir .stockist-group',
+                    { opacity: 0, y: 28 },
+                    {
+                        opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
+                        scrollTrigger: { trigger: '#stockist-dir', start: 'top 88%', once: true }
+                    });
+                gsap.fromTo('#stockist-dir .stockist-dir-tagline',
+                    { opacity: 0, x: 32 },
+                    {
+                        opacity: 1, x: 0, duration: 0.75, ease: 'expo.out', delay: 0.2,
+                        scrollTrigger: { trigger: '#stockist-dir', start: 'top 88%', once: true }
                     });
 
                 /* ── Slinga heading — clip reveal ──── */
@@ -1937,6 +2156,14 @@
                     {
                         opacity: 1, duration: 0.5, delay: 0.32,
                         scrollTrigger: { trigger: '#store', start: 'top 86%', once: true }
+                    });
+
+                /* ── Stockist inquiry section ────── */
+                gsap.fromTo('#stockist .stockist-text',
+                    { opacity: 0, y: 18 },
+                    {
+                        opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+                        scrollTrigger: { trigger: '#stockist', start: 'top 92%', once: true }
                     });
 
                 /* ── Signup section ──────────────── */
