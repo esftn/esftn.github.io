@@ -9,8 +9,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOAH</title>
-    <meta name="description" content="Lingerie & Underwear Store">
+    <title>HOAH Collective | Official Site</title>
+    <meta name="description" content="HOAH is the swimwear brand behind the iconic Infinity Slinga. Shop sparkle bikinis, metallic kinis &amp; festival swimwear made for pool parties, raves and beyond. One size fits most. Ships worldwide via Hella Heels &amp; CXIX.">
+    <meta name="keywords" content="HOAH, HOAH swimwear, infinity slinga, rhinestone swimwear, sparkle bikini, festival swimwear, sequin bikini, metallic bikini, sparkle kini, rhinestone slingshot, festival bikini, rave swimwear, pole dance swimwear, showgirl bikini, pool party swimwear">
     <meta name="theme-color" content="#131313">
     <link rel="canonical" href="https://hoah.com.au">
     <link rel="preconnect" href="https://static.klaviyo.com" crossorigin>
@@ -25,19 +26,22 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
-    <meta property="og:title" content="HOAH" />
-    <meta property="og:description" content="Lingerie & Underwear Store" />
+    <meta property="og:title" content="HOAH Collective | Official Site" />
+    <meta property="og:description" content="HOAH is the swimwear brand behind the iconic Infinity Slinga. Shop sparkle bikinis, metallic kinis &amp; festival swimwear made for pool parties, raves and beyond. One size fits most. Ships worldwide via Hella Heels &amp; CXIX." />
     <meta property="og:url" content="https://hoah.com.au" />
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="HOAH" />
     <meta property="og:image" content="./img/socials/HOAH-OG-Preview-Image-1200x630high.jpg" />
     <meta property="og:image:secure_url" content="./img/socials/HOAH-OG-Preview-Image-1200x630high.jpg">
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="HOAH Collective swimwear and Infinity Slinga" />
 
-    <meta name="twitter:title" content="HOAH">
-    <meta name="twitter:description" content="Lingerie & Underwear Store">
+    <meta name="twitter:title" content="HOAH Collective | Official Site">
+    <meta name="twitter:description" content="HOAH is the swimwear brand behind the iconic Infinity Slinga. Shop sparkle bikinis, metallic kinis &amp; festival swimwear made for pool parties, raves and beyond. One size fits most. Ships worldwide via Hella Heels &amp; CXIX.">
     <meta name="twitter:image" content="./img/socials/HOAH-Twitter-Preview-1200x600high.jpg">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@hoahcollective">
 
     <meta name="google-site-verification" content="xzbp_gisK3F9Q-8kdr_BA98O7bbBAS1wGN2Aj32uRL0" />
 
@@ -725,9 +729,30 @@
             text-transform: uppercase;
             line-height: 1.35;
             cursor: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35em;
             position: relative;
             transition: color 0.2s;
+        }
+
+        .stockist-dir-link .ext-icon {
+            flex-shrink: 0;
+            width: 0.7em;
+            height: 0.7em;
+            opacity: 0.45;
+            transition: opacity 0.2s, transform 0.2s;
+            fill: currentColor;
+            display: inline-block;
+            position: relative;
+            top: -0.05em; /* optical alignment */
+        }
+
+        @media (hover: hover) {
+            .stockist-dir-link:hover .ext-icon {
+                opacity: 0.9;
+                transform: translate(1px, -1px);
+            }
         }
 
         .stockist-dir-link::after {
@@ -1055,19 +1080,19 @@
 
                 <div class="stockist-group">
                     <span class="stockist-group-label">UK Stockists:</span>
-                    <a class="stockist-dir-link" href="https://cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX UK</a>
-                    <a class="stockist-dir-link" href="https://uk.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels UK</a>
+                    <a class="stockist-dir-link" href="https://cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX UK<svg class="ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" aria-hidden="true"><path d="m38.288 10.297 1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10zM35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3"/></svg></a>
+                    <a class="stockist-dir-link" href="https://uk.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels UK<svg class="ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" aria-hidden="true"><path d="m38.288 10.297 1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10zM35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3"/></svg></a>
                 </div>
 
                 <div class="stockist-group">
                     <span class="stockist-group-label">US Stockists:</span>
-                    <a class="stockist-dir-link" href="https://us.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels US</a>
-                    <a class="stockist-dir-link" href="https://us.cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX US<span class="limited"> (Limited Product Range)</span></a>
+                    <a class="stockist-dir-link" href="https://us.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels US<svg class="ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" aria-hidden="true"><path d="m38.288 10.297 1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10zM35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3"/></svg></a>
+                    <a class="stockist-dir-link" href="https://us.cxix.com/collections/hoah" target="_blank" rel="noopener">CXIX US<span class="limited"> (Limited Product Range)</span><svg class="ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" aria-hidden="true"><path d="m38.288 10.297 1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10zM35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3"/></svg></a>
                 </div>
 
                 <div class="stockist-group">
                     <span class="stockist-group-label">AU Stockists:</span>
-                    <a class="stockist-dir-link" href="https://au.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels AU</a>
+                    <a class="stockist-dir-link" href="https://au.hellaheels.com/collections/hoah" target="_blank" rel="noopener">Hella Heels AU<svg class="ext-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" aria-hidden="true"><path d="m38.288 10.297 1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10zM35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3"/></svg></a>
                 </div>
 
             </div>
@@ -1081,6 +1106,7 @@
 
         </div>
     </section>
+
 
     <!-- ══════ BESTSELLING SLINGA ══════ -->
     <section class="slinga-section" id="slinga">
