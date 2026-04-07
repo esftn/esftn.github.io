@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -181,16 +182,21 @@
             width: 100%;
             background: #0c1b1d;
             overflow: hidden;
+            /* Mobile: reserve space before image loads — update ratio to match
+               MOBILE-HERO-BANNER.jpg actual dimensions (width ÷ height) */
+            aspect-ratio: 1200 / 857;
         }
 
-        /* @media (min-width: 768px) {
-  .hero {
-    aspect-ratio: 16/8;
-    max-height: 82vh;
-  }
-} */
+        @media (min-width: 768px) {
+            .hero {
+                /* Desktop: update ratio to match WEB-HERO-BANNER.jpg dimensions */
+                aspect-ratio: 2160 / 675;
+            }
+        }
 
         .hero-img {
+            position: absolute;
+            inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
