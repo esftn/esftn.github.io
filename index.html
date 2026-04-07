@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -150,43 +151,6 @@
             }
         }
 
-        /* ── Drag label cursor ── */
-        #cur-drag {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            will-change: transform;
-            opacity: 0;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            background: #fff;
-            color: #000;
-            font-family: "Bebas Neue", sans-serif;
-            font-size: 13px;
-            letter-spacing: 0.18em;
-            padding: 8px 14px;
-            border-radius: 100px;
-            white-space: nowrap;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.22);
-            user-select: none;
-        }
-
-        #cur-drag .drag-arrow {
-            font-size: 11px;
-            opacity: 0.55;
-            display: inline-block;
-        }
-
-        #cur-drag .drag-arrow.left  { margin-right: -2px; }
-        #cur-drag .drag-arrow.right { margin-left: -2px; }
-
-        @media (pointer: coarse) {
-            #cur-drag { display: none; }
-        }
 
         /* ══════════════════════════════════════
    HEADER — dark teal bar + HOAH logo
@@ -292,7 +256,7 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            cursor: none;
+            cursor: grab;
             user-select: none;
             -webkit-user-select: none;
         }
@@ -302,7 +266,7 @@
         }
 
         .carousel-track.dragging {
-            cursor: none;
+            cursor: grabbing;
         }
 
         /* ── Touch devices: let the browser handle scroll natively with snap.
@@ -481,6 +445,13 @@
             color: #000;
             text-align: center;
             white-space: normal;
+        }
+
+        @media (max-width: 600px) {
+            .discover-row-link {
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
         }
 
         .discover-row-link:hover {
@@ -1070,11 +1041,6 @@
     <!-- ══════ CURSOR ══════ -->
     <div id="cur-dot"></div>
     <div id="cur-ring"></div>
-    <div id="cur-drag">
-        <span class="drag-arrow left">←</span>
-        <span class="drag-label">DRAG</span>
-        <span class="drag-arrow right">→</span>
-    </div>
     <!-- ══════ HEADER ══════ -->
     <header class="site-header" id="siteHeader">
         <svg id="header-logo" style="enable-background:new 0 0 800 400" viewbox="0 0 800 400" xml:space="preserve"
@@ -1401,113 +1367,10 @@
                         el.addEventListener('mouseleave', () => gsap.to(ring, { width: 30, height: 30, duration: .2 }));
                     });
                     const track = document.getElementById('carTrack');
-                    const dragCursor = document.getElementById('cur-drag');
-                    const arrowL = dragCursor.querySelector('.drag-arrow.left');
-                    const arrowR = dragCursor.querySelector('.drag-arrow.right');
-                    let arrowAnim = null;
-
-                    // Follow mouse — smooth lag
-                    document.addEventListener('mousemove', e => {
-                        gsap.to(dragCursor, { x: e.clientX, y: e.clientY, duration: 0.18, ease: 'power2.out' });
-                    });
-
-                    // ── Edge detection ──────────────────────────────────────
-                    function edgeState() {
-                        const sl  = track.scrollLeft;
-                        const max = track.scrollWidth - track.clientWidth;
-                        return { atStart: sl <= 2, atEnd: sl >= max - 2 };
-                    }
-
-                    // Set arrow visibility instantly to reflect current edge state
-                    function applyEdgeVisibility() {
-                        const { atStart, atEnd } = edgeState();
-                        gsap.killTweensOf([arrowL, arrowR]);
-                        gsap.set(arrowL, { opacity: atStart ? 0 : 0.5, x: 0 });
-                        gsap.set(arrowR, { opacity: atEnd   ? 0 : 0.5, x: 0 });
-                    }
-
-                    // Smoothly fade arrows as edges are reached/left during scroll
-                    track.addEventListener('scroll', () => {
-                        if (parseFloat(gsap.getProperty(dragCursor, 'opacity')) < 0.05) return;
-                        if (arrowAnim) return; // let ping handle it while idle
-                        const { atStart, atEnd } = edgeState();
-                        gsap.to(arrowL, { opacity: atStart ? 0 : 0.5, x: 0, duration: 0.22 });
-                        gsap.to(arrowR, { opacity: atEnd   ? 0 : 0.5, x: 0, duration: 0.22 });
-                    }, { passive: true });
-
-                    // ── Idle ping — only animates arrows that aren't at edge ──
-                    function startArrowPing() {
-                        if (arrowAnim) arrowAnim.kill();
-                        applyEdgeVisibility();
-                        const { atStart, atEnd } = edgeState();
-                        arrowAnim = gsap.timeline({ repeat: -1, repeatDelay: 0.25 });
-                        if (!atStart) {
-                            arrowAnim
-                                .to(arrowL, { x: -5, opacity: 1,   duration: 0.38, ease: 'power2.inOut' })
-                                .to(arrowL, { x:  0, opacity: 0.5, duration: 0.3,  ease: 'power2.inOut' }, '>');
-                        }
-                        if (!atEnd) {
-                            const offset = atStart ? '<0' : '<-0.68';
-                            arrowAnim
-                                .to(arrowR, { x:  5, opacity: 1,   duration: 0.38, ease: 'power2.inOut' }, offset)
-                                .to(arrowR, { x:  0, opacity: 0.5, duration: 0.3,  ease: 'power2.inOut' }, '>');
-                        }
-                    }
-
-                    function stopArrowPing() {
-                        if (arrowAnim) { arrowAnim.kill(); arrowAnim = null; }
-                        gsap.killTweensOf([arrowL, arrowR]);
-                        applyEdgeVisibility();
-                    }
-
-                    track.addEventListener('mouseenter', () => {
-                        gsap.to(dot,  { opacity: 0, duration: 0.12 });
-                        gsap.to(ring, { opacity: 0, duration: 0.12 });
-                        gsap.fromTo(dragCursor,
-                            { scale: 0.75 },
-                            { opacity: 1, scale: 1, duration: 0.28, ease: 'back.out(2)' }
-                        );
-                        startArrowPing();
-                    });
-
-                    track.addEventListener('mouseleave', () => {
-                        gsap.to(dot,  { opacity: 1, duration: 0.15 });
-                        gsap.to(ring, { opacity: 1, duration: 0.15 });
-                        gsap.to(dragCursor, { opacity: 0, scale: 0.8, duration: 0.18, ease: 'power2.in' });
-                        stopArrowPing();
-                    });
-
-                    let lastDragX = 0;
-                    track.addEventListener('mousedown', e => {
-                        lastDragX = e.clientX;
-                        stopArrowPing();
-                        gsap.to(dragCursor, { scale: 0.86, duration: 0.1, ease: 'power2.in' });
-                        applyEdgeVisibility();
-                    });
-
-                    window.addEventListener('mousemove', e => {
-                        if (!track.classList.contains('dragging')) return;
-                        const delta = e.clientX - lastDragX;
-                        lastDragX = e.clientX;
-                        if (Math.abs(delta) < 1) return;
-                        const { atStart, atEnd } = edgeState();
-                        const goLeft = delta < 0;
-                        gsap.to(arrowL, {
-                            opacity: atStart ? 0 : (goLeft  ? 1   : 0.1),
-                            x:       atStart ? 0 : (goLeft  ? -6  : 0),
-                            duration: 0.1
-                        });
-                        gsap.to(arrowR, {
-                            opacity: atEnd   ? 0 : (!goLeft ? 1   : 0.1),
-                            x:       atEnd   ? 0 : (!goLeft ?  6  : 0),
-                            duration: 0.1
-                        });
-                    });
-
-                    track.addEventListener('mouseup', () => {
-                        gsap.to(dragCursor, { scale: 1, duration: 0.25, ease: 'back.out(2.5)' });
-                        startArrowPing();
-                    });
+                    track.addEventListener('mouseenter', () => gsap.to(ring, { borderColor: 'rgba(255,255,255,0.6)', duration: .2 }));
+                    track.addEventListener('mouseleave', () => gsap.to(ring, { width: 30, height: 30, borderColor: 'rgba(255,255,255,0.45)', duration: .2 }));
+                    track.addEventListener('mousedown', () => gsap.to(ring, { width: 52, height: 52, duration: .15, ease: 'power2.out' }));
+                    track.addEventListener('mouseup',   () => gsap.to(ring, { width: 30, height: 30, duration: .25, ease: 'power2.out' }));
                 }
                 /* ── Stockist directory ─────────────── */
                 gsap.fromTo('#stockist-dir .stockist-group',
