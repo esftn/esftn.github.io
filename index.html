@@ -86,7 +86,7 @@
             color: #000;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            cursor: none;
+            
         }
 
         img {
@@ -104,54 +104,8 @@
             font-family: inherit;
             border: none;
             background: none;
-            cursor: none;
+            
         }
-
-        /* ══════════════════════════════════════
-   CUSTOM CURSOR
-══════════════════════════════════════ */
-        #cur-dot,
-        #cur-ring {
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            will-change: transform;
-        }
-
-        #cur-dot {
-            z-index: 9999;
-            width: 7px;
-            height: 7px;
-            background: #ffffff;
-            mix-blend-mode: difference;
-        }
-
-        #cur-ring {
-            z-index: 9999;
-            width: 30px;
-            height: 30px;
-            border: 1.5px solid rgba(255, 255, 255, 0.45);
-            transition:
-                width 0.2s,
-                height 0.2s;
-            mix-blend-mode: difference;
-        }
-
-        @media (pointer: coarse) {
-            body {
-                cursor: auto;
-            }
-
-            #cur-dot,
-            #cur-ring {
-                display: none;
-            }
-        }
-
 
         /* ══════════════════════════════════════
    HEADER — dark teal bar + HOAH logo
@@ -336,7 +290,7 @@
             align-items: center;
             justify-content: center;
             z-index: 5;
-            cursor: none;
+            
             transition: background 0.18s;
         }
 
@@ -479,7 +433,7 @@
             aspect-ratio: 1;
             position: relative;
             overflow: hidden;
-            cursor: none;
+            
         }
 
         @media (min-width: 768px) {
@@ -624,7 +578,7 @@
             font-size: clamp(21px, 2.5vw, 36px);
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            cursor: none;
+            
             white-space: nowrap;
             transition:
                 background 0.22s,
@@ -674,7 +628,7 @@
             text-underline-offset: 3px;
             text-decoration-thickness: 2px;
             transition: opacity 0.2s;
-            cursor: none;
+            
         }
 
         .stockist-text a.stockist-link:hover {
@@ -742,7 +696,7 @@
             text-decoration: none;
             text-transform: uppercase;
             line-height: 1.35;
-            cursor: none;
+            
             display: inline-flex;
             align-items: center;
             gap: 0.35em;
@@ -867,7 +821,7 @@
             font-family: "DM Sans", sans-serif;
             font-size: clamp(11px, 1.8vw, 18px);
             outline: none;
-            cursor: none;
+            
             -webkit-appearance: none;
             transition: border-color 0.2s;
             margin-right: 10px;
@@ -916,7 +870,7 @@
             font-size: clamp(21px, 2.5vw, 36px);
             font-weight: 800;
             text-transform: uppercase;
-            cursor: none;
+            
             white-space: nowrap;
             border: 2px solid #000;
             transition: background 0.25s ease,
@@ -1001,7 +955,7 @@
             text-decoration: underline;
             text-underline-offset: 3px;
             transition: transform 0.25s;
-            cursor: none;
+            
         }
 
         .footer-handle:hover {
@@ -1016,7 +970,7 @@
             height: clamp(42px, 7vw, 52px);
             border: 1.5px solid rgba(255, 255, 255, 0.3);
             border-radius: clamp(10px, 1.8vw, 13px);
-            cursor: none;
+            
             transition:
                 border-color 0.25s,
                 transform 0.25s;
@@ -1044,9 +998,6 @@
     <!-- ══════ SCROLL PROGRESS ══════ -->
     <div id="scroll-prog"></div>
 
-    <!-- ══════ CURSOR ══════ -->
-    <div id="cur-dot"></div>
-    <div id="cur-ring"></div>
     <!-- ══════ HEADER ══════ -->
     <header class="site-header" id="siteHeader">
         <svg id="header-logo" style="enable-background:new 0 0 800 400" viewbox="0 0 800 400" xml:space="preserve"
@@ -1352,32 +1303,6 @@
                 const isTouch = window.matchMedia('(pointer:coarse)').matches;
                 /* ── Smooth in-page anchor scroll (Lenis) ── */
 
-
-
-                /* ── Cursor ──────────────────────── */
-                const dot = document.getElementById('cur-dot');
-                const ring = document.getElementById('cur-ring');
-                if (!isTouch) {
-                    let mx = 0, my = 0, rx = 0, ry = 0;
-                    document.addEventListener('mousemove', e => {
-                        mx = e.clientX; my = e.clientY;
-                        gsap.to(dot, { x: mx, y: my, duration: .08, ease: 'none' });
-                    });
-                    (function loop() {
-                        rx += (mx - rx) * .09; ry += (my - ry) * .09;
-                        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-                        requestAnimationFrame(loop);
-                    })();
-                    document.querySelectorAll('a,button,.footer-ig,.store-btn,.stockist-link,.stockist-dir-link').forEach(el => {
-                        el.addEventListener('mouseenter', () => gsap.to(ring, { width: 50, height: 50, duration: .2 }));
-                        el.addEventListener('mouseleave', () => gsap.to(ring, { width: 30, height: 30, duration: .2 }));
-                    });
-                    const track = document.getElementById('carTrack');
-                    track.addEventListener('mouseenter', () => gsap.to(ring, { borderColor: 'rgba(255,255,255,0.6)', duration: .2 }));
-                    track.addEventListener('mouseleave', () => gsap.to(ring, { width: 30, height: 30, borderColor: 'rgba(255,255,255,0.45)', duration: .2 }));
-                    track.addEventListener('mousedown', () => gsap.to(ring, { width: 52, height: 52, duration: .15, ease: 'power2.out' }));
-                    track.addEventListener('mouseup',   () => gsap.to(ring, { width: 30, height: 30, duration: .25, ease: 'power2.out' }));
-                }
                 /* ── Stockist directory ─────────────── */
                 gsap.fromTo('#stockist-dir .stockist-group',
                     { opacity: 0, y: 28 },
